@@ -16,6 +16,16 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "noErrorTruncation": true,
+    "paths": {
+      "@data/*": ["data/*"],
+      "@common/*": ["src/common/*"],
+      "@config/*": ["src/config/*"],
+      "@iam/*": ["src/module/iam/*"],
+      "@test/*": ["src/test/*"],
+      "@/*": ["src/*"],
+      "@root/*": ["*"]
+    }
   }
 }
