@@ -5,7 +5,6 @@ import {
   IDENTITY_PROVIDER_SERVICE_KEY,
   IIdentityProviderService,
 } from '@iam/authentication/application/service/identity-provider.service.interface';
-
 import { AppModule } from '@/module/app.module';
 
 export const identityProviderServiceMock: jest.MockedObject<IIdentityProviderService> =
