@@ -16,4 +16,3 @@ export class UserFieldsQueryParamsDto {
   @IsOptional()
   target?: UserFields;
 }
-
