@@ -27,8 +27,8 @@ export const setupApp = (app: INestApplication) => {
 
 export const setupSwagger = (app: INestApplication) => {
   const config = new DocumentBuilder()
-    .setTitle('My Mood - Core API')
-    .setDescription('Core API for My Mood')
+    .setTitle('My Mood Core API')
+    .setDescription('Core API for managing mood-related data and services')
     .setVersion('1.0')
     .build();
 
