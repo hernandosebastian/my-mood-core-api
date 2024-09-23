@@ -5,7 +5,9 @@ import { Base } from '@common/base/domain/base.entity';
 // https://bigfont.ca/what-does-keyof-t-do-at-the-end-of-a-type-declaration/
 // https://www.typescriptlang.org/docs/handbook/2/indexed-access-types.html
 type OnlyAttributes<Entity> = {
-  [P in keyof Entity]: Entity[P] extends Base[] | Base | Function ? never : P;
+  [P in keyof Entity]: Entity[P] extends Base[] | Base | ((args: any) => any)
+    ? never
+    : P;
 }[keyof Entity];
 
 type PageOptions = {
