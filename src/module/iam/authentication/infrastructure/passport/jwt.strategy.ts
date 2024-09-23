@@ -40,8 +40,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
               cache: true,
               rateLimit: true,
               jwksRequestsPerMinute: 5,
-              jwksUri:
-                configService.get('cognito.issuer') + '/.well-known/jwks.json',
+              jwksUri: `${configService.get('cognito.issuer')}/.well-known/jwks.json`,
             }),
           };
 
