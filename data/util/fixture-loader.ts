@@ -32,6 +32,7 @@ export const loadFixtures = async (
       await dataSource.getRepository(fixture.entity).save(entity);
     }
   } catch (err) {
+    console.error(err);
     throw err;
   } finally {
     if (dataSource) {
