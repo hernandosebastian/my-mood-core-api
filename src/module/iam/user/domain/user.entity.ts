@@ -11,17 +11,24 @@ export class User extends Base {
   constructor(
     username: string,
     roles: AppRole[],
-    externalId?: string,
-    id?: number,
-    createdAt?: string,
-    updatedAt?: string,
-    deletedAt?: string,
-    isVerified?: boolean,
+    options?: {
+      externalId?: string;
+      id?: number;
+      createdAt?: string;
+      updatedAt?: string;
+      deletedAt?: string;
+      isVerified?: boolean;
+    },
   ) {
-    super(id, createdAt, updatedAt, deletedAt);
+    super(
+      options?.id,
+      options?.createdAt,
+      options?.updatedAt,
+      options?.deletedAt,
+    );
     this.username = username;
-    this.externalId = externalId;
+    this.externalId = options?.externalId;
     this.roles = roles;
-    this.isVerified = isVerified;
+    this.isVerified = options?.isVerified;
   }
 }
