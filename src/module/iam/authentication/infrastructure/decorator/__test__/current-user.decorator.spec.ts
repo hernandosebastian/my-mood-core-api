@@ -2,9 +2,9 @@ import { ExecutionContext } from '@nestjs/common';
 import { ROUTE_ARGS_METADATA } from '@nestjs/common/constants';
 import { Request } from 'express';
 
+import { REQUEST_USER_KEY } from '@iam/authentication/authentication.constants';
 import { CurrentUser } from '@iam/authentication/infrastructure/decorator/current-user.decorator';
 import { User } from '@iam/user/domain/user.entity';
-import { REQUEST_USER_KEY } from '@iam/authentication/authentication.constants';
 
 describe('@CurrentUser', () => {
   const user = { id: 1, username: 'john.doe@test.com' } as User;
