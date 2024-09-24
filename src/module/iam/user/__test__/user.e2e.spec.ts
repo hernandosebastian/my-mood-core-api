@@ -1,8 +1,6 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 
-import { loadFixtures } from '@data/util/fixture-loader';
-
 import { setupApp } from '@config/app.config';
 import { datasourceOptions } from '@config/orm.config';
 
@@ -10,6 +8,7 @@ import { UserResponseDto } from '@iam/user/application/dto/user-response.dto';
 
 import { testModuleBootstrapper } from '@test/test.module.bootstrapper';
 import { createAccessToken } from '@test/test.util';
+import { loadFixtures } from '@data/util/fixture-loader';
 
 describe('User Module', () => {
   let app: INestApplication;
