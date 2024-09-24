@@ -48,6 +48,7 @@
     "better-sqlite3": "^9.6.0",
     "class-validator": "^0.14.1",
     "cross-env": "^7.0.3",
+    "husky": "^9.1.6",
     "jwks-rsa": "^3.1.0",
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.2.0",
