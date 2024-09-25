@@ -1,0 +1,44 @@
+name: CI workflow
+
+on:
+  push:
+    branches: ['main']
+  pull_request:
+    branches: ['*']
+
+jobs:
+  test:
+    permissions: write-all
+
+    runs-on: ubuntu-latest
+
+    env:
+      PORT: 5000
+      DB_HOST: localhost
+      DB_PORT: 3306
+      DB_USERNAME: root
+      DB_PASSWORD: 123456
+      DB_NAME: db_test
+      COGNITO_USER_POOL_ID: local_0tm1eyyS
+      COGNITO_CLIENT_ID: dy84cymh67njie4bdru9g3rk2
+      COGNITO_ISSUER: http://localhost:9229/local_0tm1eyyS
+      COGNITO_ENDPOINT: http://localhost:9229
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: NPM or Yarn install with caching
+        uses: bahmutov/npm-install@v1.6.0
+
+      - name: Build and test with coverage
+        run: npm run test:cov
