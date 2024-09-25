@@ -1,4 +1,4 @@
-name: CI workflow
+name: CI Workflow
 
 on:
   push:
@@ -6,31 +6,27 @@ on:
   pull_request:
     branches: ['*']
 
+env:
+  PORT: 5000
+  DB_HOST: localhost
+  DB_PORT: 3306
+  DB_USERNAME: root
+  DB_PASSWORD: 123456
+  DB_NAME: db_test
+  COGNITO_USER_POOL_ID: local_0tm1eyyS
+  COGNITO_CLIENT_ID: dy84cymh67njie4bdru9g3rk2
+  COGNITO_ISSUER: http://localhost:9229/local_0tm1eyyS
+  COGNITO_ENDPOINT: http://localhost:9229
+
 jobs:
-  test:
-    permissions: write-all
-
+  build:
     runs-on: ubuntu-latest
-
-    env:
-      PORT: 5000
-      DB_HOST: localhost
-      DB_PORT: 3306
-      DB_USERNAME: root
-      DB_PASSWORD: 123456
-      DB_NAME: db_test
-      COGNITO_USER_POOL_ID: local_0tm1eyyS
-      COGNITO_CLIENT_ID: dy84cymh67njie4bdru9g3rk2
-      COGNITO_ISSUER: http://localhost:9229/local_0tm1eyyS
-      COGNITO_ENDPOINT: http://localhost:9229
-
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [16.x]
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -40,5 +36,13 @@ jobs:
       - name: NPM or Yarn install with caching
         uses: bahmutov/npm-install@v1.6.0
 
-      - name: Build and test with coverage
+      - name: Lint & Format
+        run: |
+          npm run lint
+          npm run format
+
+      - name: Build
+        run: npm run build
+
+      - name: Run Tests
         run: npm run test:cov
