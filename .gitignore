@@ -18,6 +18,8 @@ lerna-debug.log*
 # Tests
 /coverage
 /.nyc_output
+/data/sqlite
+
 
 # IDEs and editors
 /.idea
