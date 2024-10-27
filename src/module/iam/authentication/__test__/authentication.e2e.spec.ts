@@ -76,7 +76,7 @@ describe('Authentication Module', () => {
         });
 
         await request(app.getHttpServer())
-          .get('/api/v1/user')
+          .get('/api/v1/user/me')
           .auth(accessToken, { type: 'bearer' })
           .expect(HttpStatus.OK);
       });
@@ -87,7 +87,7 @@ describe('Authentication Module', () => {
         });
 
         await request(app.getHttpServer())
-          .get('/api/v1/user')
+          .get('/api/v1/user/me')
           .auth(accessToken, { type: 'bearer' })
           .expect(HttpStatus.FORBIDDEN);
       });
@@ -101,7 +101,7 @@ describe('Authentication Module', () => {
         );
 
         await request(app.getHttpServer())
-          .get('/api/v1/user')
+          .get('/api/v1/user/me')
           .auth(accessToken, { type: 'bearer' })
           .expect(HttpStatus.UNAUTHORIZED)
           .then(({ body }) => {
