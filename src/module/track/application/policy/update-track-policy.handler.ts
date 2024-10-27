@@ -1,18 +1,18 @@
-import { Inject, Injectable, Type } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Request } from 'express';
 
-import { REQUEST_USER_KEY } from '@iam/authentication/authentication.constants';
 import { AuthorizationService } from '@iam/authorization/application/service/authorization.service';
 import { AppAction } from '@iam/authorization/domain/app-action.enum';
 import { IPolicyHandler } from '@iam/authorization/infrastructure/policy/handler/policy-handler.interface';
 import { PolicyHandlerStorage } from '@iam/authorization/infrastructure/policy/storage/policies-handler.storage';
-import { User } from '@iam/user/domain/user.entity';
+import { getCurrentUserFromRequest } from '@iam/user/domain/util/getCurrentUserFromRequest.util';
 
 import {
   ITrackRepository,
   TRACK_REPOSITORY_KEY,
 } from '@/module/track/application/repository/track.repository.interface';
 import { Track } from '@/module/track/domain/track.entity';
+import { TrackNotFoundException } from '@/module/track/infrastructure/database/exception/track-not-found.exception';
 
 @Injectable()
 export class UpdateTrackPolicyHandler implements IPolicyHandler {
@@ -28,13 +28,17 @@ export class UpdateTrackPolicyHandler implements IPolicyHandler {
   }
 
   async handle(request: Request): Promise<void> {
-    const currentUser = this.getCurrentUser(request);
-    const subjectOrSubjectCls = await this.getSubject(request);
+    const currentUser = getCurrentUserFromRequest(request);
+    const subject = await this.getSubjectOrThrowError(request);
+
+    if (subject.ownerId !== currentUser.id) {
+      throw new Error(`You do not own this resource`);
+    }
 
     const isAllowed = this.authorizationService.isAllowed(
       currentUser,
       this.action,
-      subjectOrSubjectCls,
+      subject,
     );
 
     if (!isAllowed) {
@@ -44,14 +48,16 @@ export class UpdateTrackPolicyHandler implements IPolicyHandler {
     }
   }
 
-  private getCurrentUser(request: Request): User {
-    return request[REQUEST_USER_KEY];
-  }
-
-  private async getSubject(request: Request): Promise<Track | Type<Track>> {
-    const searchParam = request.params['id'];
-    const subjectId = searchParam ? parseInt(searchParam) : undefined;
+  private async getSubjectOrThrowError(request: Request): Promise<Track> {
+    const subjectId = parseInt(request.params.id);
     const subject = await this.trackRepository.getOneById(subjectId);
-    return subject ?? Track;
+
+    if (!(subject instanceof Track)) {
+      throw new TrackNotFoundException(
+        `Track with ID ${request.params.id} not found`,
+      );
+    }
+
+    return subject;
   }
 }
