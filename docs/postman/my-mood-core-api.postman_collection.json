@@ -39,7 +39,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"username\": \"{{$randomUserName}}\",\r\n    \"code\": \"123456\" // CODE FROM COGNITO\r\n}\r\n",
+              "raw": "{\r\n    \"username\": \"{{$randomUserName}}\",\r\n    \"code\": \"<CODE_FROM_COGNITO>\"\r\n}\r\n",
               "options": {
                 "raw": {
                   "language": "json"
@@ -127,7 +127,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"username\": \"{{$randomUserName}}\",\r\n    \"newPassword\": \"{{$randomPassword}}\",\r\n    \"code\": \"123456\" // CODE FROM COGNITO\r\n}\r\n",
+              "raw": "{\r\n    \"username\": \"{{$randomUserName}}\",\r\n    \"newPassword\": \"{{$randomPassword}}\",\r\n    \"code\": \"<CODE_FROM_COGNITO>\"\r\n}\r\n",
               "options": {
                 "raw": {
                   "language": "json"
