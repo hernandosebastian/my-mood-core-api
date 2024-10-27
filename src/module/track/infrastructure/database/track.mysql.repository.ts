@@ -19,8 +19,8 @@ export class TrackMysqlRepository implements ITrackRepository {
   ): Promise<Track[]> {
     return this.repository.find({
       where: {
-        date: Between(startDate, endDate),
         ownerId,
+        date: Between(startDate, endDate),
       },
     });
   }
