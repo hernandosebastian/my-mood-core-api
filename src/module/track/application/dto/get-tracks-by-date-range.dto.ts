@@ -1,9 +1,9 @@
-import { IGetAllOptions } from '@common/base/application/interface/get-all-options.interface';
-
-import { Track } from '@/module/track/domain/track.entity';
+import { IsDateString } from 'class-validator';
 
 export class GetTracksByDateRangeDto {
-  options: IGetAllOptions<Track>;
-  startDate: Date;
-  endDate: Date;
+  @IsDateString()
+  startDate: string;
+
+  @IsDateString()
+  endDate: string;
 }
