@@ -27,7 +27,8 @@ export class TrackService {
   ): Promise<TrackResponseDto[]> {
     await this.userService.getOneOrFail(ownerId);
 
-    const { startDate, endDate } = getTracksByDateRangeDto;
+    const startDate = new Date(getTracksByDateRangeDto.startDate);
+    const endDate = new Date(getTracksByDateRangeDto.endDate);
     const tracks = await this.trackRepository.getTracksByDateRange(
       startDate,
       endDate,
@@ -39,11 +40,14 @@ export class TrackService {
     );
   }
 
-  async saveOne(createTrackDto: ICreateTrackDto): Promise<TrackResponseDto> {
-    await this.userService.getOneOrFail(createTrackDto.ownerId);
+  async saveOne(
+    createTrackDto: ICreateTrackDto,
+    ownerId: number,
+  ): Promise<TrackResponseDto> {
+    await this.userService.getOneOrFail(ownerId);
 
     const track = await this.trackRepository.saveOne(
-      this.trackMapper.fromCreateTrackDtoToTrack(createTrackDto),
+      this.trackMapper.fromCreateTrackDtoToTrack(createTrackDto, ownerId),
     );
 
     return this.trackMapper.fromTrackToTrackResponseDto(track);
@@ -52,10 +56,11 @@ export class TrackService {
   async updateOneOrFail(
     id: number,
     updateTrackDto: IUpdateTrackDto,
+    ownerId: number,
   ): Promise<TrackResponseDto> {
     const track = await this.trackRepository.updateOneOrFail(
       id,
-      this.trackMapper.fromUpdateTrackDtoToTrack(updateTrackDto),
+      this.trackMapper.fromUpdateTrackDtoToTrack(updateTrackDto, ownerId),
     );
     return this.trackMapper.fromTrackToTrackResponseDto(track);
   }
