@@ -2,15 +2,19 @@ import { Base } from '@common/base/domain/base.entity';
 
 import { AppRole } from '@iam/authorization/domain/app-role.enum';
 
+import { Track } from '@/module/track/domain/track.entity';
+
 export class User extends Base {
   username: string;
   externalId?: string;
   roles: AppRole[];
   isVerified: boolean;
+  tracks?: Track[];
 
   constructor(
     username: string,
     roles: AppRole[],
+    tracks?: Track[],
     options?: {
       externalId?: string;
       id?: number;
@@ -30,5 +34,6 @@ export class User extends Base {
     this.externalId = options?.externalId;
     this.roles = roles;
     this.isVerified = options?.isVerified;
+    this.tracks = tracks;
   }
 }

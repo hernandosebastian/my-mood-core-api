@@ -2,6 +2,8 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 import { AppRole } from '@iam/authorization/domain/app-role.enum';
 
+import { Track } from '@/module/track/domain/track.entity';
+
 export class UserResponseDto {
   @ApiProperty()
   id: number;
@@ -14,6 +16,9 @@ export class UserResponseDto {
 
   @ApiProperty()
   roles: AppRole[];
+
+  @ApiPropertyOptional()
+  tracks?: Track[];
 
   @ApiProperty()
   createdAt: string;

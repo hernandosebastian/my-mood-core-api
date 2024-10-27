@@ -30,4 +30,10 @@ export class UserService {
       ),
     });
   }
+
+  async getOneOrFail(id: number): Promise<UserResponseDto> {
+    const user = await this.userRepository.getOneByIdOrFail(id);
+
+    return this.userMapper.fromUserToUserResponseDto(user);
+  }
 }
