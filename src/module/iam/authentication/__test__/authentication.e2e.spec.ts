@@ -9,8 +9,6 @@ import { datasourceOptions } from '@config/orm.config';
 import { IConfirmPasswordDto } from '@iam/authentication/application/dto/confirm-password.dto.interface';
 import { IConfirmUserDto } from '@iam/authentication/application/dto/confirm-user.dto.interface';
 import { IForgotPasswordDto } from '@iam/authentication/application/dto/forgot-password.dto.interface';
-import { IRefreshSessionResponse } from '@iam/authentication/application/dto/refresh-session-response.interface';
-import { IRefreshSessionDto } from '@iam/authentication/application/dto/refresh-session.dto.interface';
 import { IResendConfirmationCodeDto } from '@iam/authentication/application/dto/resend-confirmation-code.dto.interface';
 import { ISignInResponse } from '@iam/authentication/application/dto/sign-in-response.interface';
 import { ISignInDto } from '@iam/authentication/application/dto/sign-in.dto.interface';
@@ -27,7 +25,6 @@ import {
   CODE_MISMATCH_ERROR,
   EXPIRED_CODE_ERROR,
   INVALID_PASSWORD_ERROR,
-  INVALID_REFRESH_TOKEN_ERROR,
   NEW_PASSWORD_REQUIRED_ERROR,
   PASSWORD_VALIDATION_ERROR,
   UNEXPECTED_ERROR_CODE_ERROR,
@@ -36,7 +33,6 @@ import {
 import { CouldNotSignUpException } from '@iam/authentication/infrastructure/cognito/exception/could-not-sign-up.exception';
 import { ExpiredCodeException } from '@iam/authentication/infrastructure/cognito/exception/expired-code.exception';
 import { InvalidPasswordException } from '@iam/authentication/infrastructure/cognito/exception/invalid-password.exception';
-import { InvalidRefreshTokenException } from '@iam/authentication/infrastructure/cognito/exception/invalid-refresh-token.exception';
 import { NewPasswordRequiredException } from '@iam/authentication/infrastructure/cognito/exception/new-password-required.exception';
 import { PasswordValidationException } from '@iam/authentication/infrastructure/cognito/exception/password-validation.exception';
 import { UnexpectedErrorCodeException } from '@iam/authentication/infrastructure/cognito/exception/unexpected-code.exception';
@@ -76,7 +72,7 @@ describe('Authentication Module', () => {
         });
 
         await request(app.getHttpServer())
-          .get('/api/v1/user')
+          .get('/api/v1/user/me')
           .auth(accessToken, { type: 'bearer' })
           .expect(HttpStatus.OK);
       });
@@ -87,7 +83,7 @@ describe('Authentication Module', () => {
         });
 
         await request(app.getHttpServer())
-          .get('/api/v1/user')
+          .get('/api/v1/user/me')
           .auth(accessToken, { type: 'bearer' })
           .expect(HttpStatus.FORBIDDEN);
       });
@@ -101,7 +97,7 @@ describe('Authentication Module', () => {
         );
 
         await request(app.getHttpServer())
-          .get('/api/v1/user')
+          .get('/api/v1/user/me')
           .auth(accessToken, { type: 'bearer' })
           .expect(HttpStatus.UNAUTHORIZED)
           .then(({ body }) => {
@@ -227,7 +223,6 @@ describe('Authentication Module', () => {
       it('Should allow users to sign in when provided a correct username and password', async () => {
         const serviceResponse: ISignInResponse = {
           accessToken: 'accessToken',
-          refreshToken: 'refreshToken',
         };
         identityProviderServiceMock.signIn.mockResolvedValueOnce(
           serviceResponse,
@@ -649,77 +644,6 @@ describe('Authentication Module', () => {
         return request(app.getHttpServer())
           .post(url)
           .send(confirmPasswordDto)
-          .expect(HttpStatus.INTERNAL_SERVER_ERROR)
-          .then(({ body }) => {
-            expect(body.message).toEqual(error.message);
-          });
-      });
-    });
-    describe('POST - /auth/refresh', () => {
-      const url = '/api/v1/auth/refresh';
-      it('Should refresh the session when provided a valid refresh token', async () => {
-        const successResponse: IRefreshSessionResponse = {
-          accessToken: 'accessToken',
-        };
-        identityProviderServiceMock.refreshSession.mockResolvedValueOnce(
-          successResponse,
-        );
-        const refreshTokenDto: IRefreshSessionDto = {
-          refreshToken: 'refreshToken',
-          username: 'admin@test.com',
-        };
-        await request(app.getHttpServer())
-          .post(url)
-          .send(refreshTokenDto)
-          .expect(HttpStatus.OK)
-          .then(({ body }) => {
-            expect(body).toEqual(successResponse);
-          });
-      });
-      it('Should respond with an InvalidRefreshTokenError when provided an invalid refresh token', async () => {
-        const error = new InvalidRefreshTokenException(
-          INVALID_REFRESH_TOKEN_ERROR,
-        );
-        identityProviderServiceMock.refreshSession.mockRejectedValueOnce(error);
-        const refreshTokenDto: IRefreshSessionDto = {
-          refreshToken: 'fakeRefreshToken',
-          username: 'admin@test.com',
-        };
-        await request(app.getHttpServer())
-          .post(url)
-          .send(refreshTokenDto)
-          .expect(HttpStatus.UNAUTHORIZED)
-          .then(({ body }) => {
-            expect(body.message).toEqual(error.message);
-          });
-      });
-      it("Should respond with an UserNotFoundException when the user doesn't exist", async () => {
-        const username = 'fakeUsername';
-        const error = new UsernameNotFoundException(username);
-        const refreshTokenDto: IRefreshSessionDto = {
-          refreshToken: 'fakeRefreshToken',
-          username,
-        };
-        await request(app.getHttpServer())
-          .post(url)
-          .send(refreshTokenDto)
-          .expect(HttpStatus.NOT_FOUND)
-          .then(({ body }) => {
-            expect(body.message).toEqual(error.message);
-          });
-      });
-      it('Should respond with an UnexpectedCodeError over unexpected errors', async () => {
-        const error = new UnexpectedErrorCodeException(
-          UNEXPECTED_ERROR_CODE_ERROR,
-        );
-        identityProviderServiceMock.refreshSession.mockRejectedValueOnce(error);
-        const refreshSessionDto: IRefreshSessionDto = {
-          username: 'admin@test.com',
-          refreshToken: 'refreshToken',
-        };
-        return request(app.getHttpServer())
-          .post(url)
-          .send(refreshSessionDto)
           .expect(HttpStatus.INTERNAL_SERVER_ERROR)
           .then(({ body }) => {
             expect(body.message).toEqual(error.message);

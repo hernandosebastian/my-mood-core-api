@@ -9,4 +9,3 @@ export const NEW_PASSWORD_REQUIRED_ERROR =
 export const CODE_MISMATCH_ERROR = 'Incorrect confirmation code';
 export const EXPIRED_CODE_ERROR =
   'Confirmation code already expired. Request a new one and try again';
-export const INVALID_REFRESH_TOKEN_ERROR = 'Invalid or malformed refresh token';
