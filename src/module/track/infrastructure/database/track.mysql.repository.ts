@@ -25,6 +25,12 @@ export class TrackMysqlRepository implements ITrackRepository {
     });
   }
 
+  async getOneById(id: number): Promise<Track> {
+    return this.repository.findOne({
+      where: { id },
+    });
+  }
+
   async saveOne(track: Track): Promise<Track> {
     return this.repository.save(track);
   }

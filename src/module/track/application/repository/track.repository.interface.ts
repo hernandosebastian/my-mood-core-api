@@ -8,6 +8,7 @@ export interface ITrackRepository {
     endDate: Date,
     ownerId: number,
   ): Promise<Track[]>;
+  getOneById(id: number): Promise<Track>;
   saveOne(track: Track): Promise<Track>;
   updateOneOrFail(
     id: number,
