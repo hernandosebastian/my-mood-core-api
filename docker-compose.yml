@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:8.0
+    cap_add:
+      - SYS_NICE
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
+    ports:
+      - '${DB_PORT}:3306'
+    volumes:
+      - ./data/docker/volumes/mysql/:/var/lib/mysql
+
+  cognito:
+    image: jagregory/cognito-local
+    ports:
+      - '9229:9229'
+    volumes:
+      - ./data/docker/volumes/cognito:/app/.cognito
+
