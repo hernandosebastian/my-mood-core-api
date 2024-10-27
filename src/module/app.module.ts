@@ -9,6 +9,8 @@ import { datasourceOptions } from '@config/orm.config';
 
 import { IamModule } from '@iam/iam.module';
 
+import { TrackModule } from '@/module/track/track.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -25,6 +27,7 @@ import { IamModule } from '@iam/iam.module';
       },
     }),
     IamModule,
+    TrackModule,
   ],
 })
 export class AppModule {}
