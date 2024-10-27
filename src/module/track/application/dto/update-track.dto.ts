@@ -1,5 +1,14 @@
-import { PartialType } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { IsOptional, IsString } from 'class-validator';
 
-import { CreateTrackDto } from '@/module/track/application/dto/create-track.dto';
+export class UpdateTrackDto {
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  title?: string;
 
-export class UpdateTrackDto extends PartialType(CreateTrackDto) {}
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
+  description?: string;
+}

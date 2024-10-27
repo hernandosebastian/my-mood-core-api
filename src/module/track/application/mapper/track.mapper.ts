@@ -7,21 +7,20 @@ import { Track } from '@/module/track/domain/track.entity';
 
 @Injectable()
 export class TrackMapper {
-  fromCreateTrackDtoToTrack(trackDto: ICreateTrackDto): Track {
+  fromCreateTrackDtoToTrack(trackDto: ICreateTrackDto, ownerId: number): Track {
     const track = new Track();
     track.title = trackDto.title;
     track.description = trackDto.description;
     track.date = trackDto.date;
-    track.ownerId = trackDto.ownerId;
+    track.ownerId = ownerId;
     return track;
   }
 
-  fromUpdateTrackDtoToTrack(trackDto: IUpdateTrackDto): Track {
+  fromUpdateTrackDtoToTrack(trackDto: IUpdateTrackDto, ownerId: number): Track {
     const track = new Track();
     track.title = trackDto.title;
     track.description = trackDto.description;
-    track.ownerId = trackDto.ownerId;
-    track.date = trackDto.date;
+    track.ownerId = ownerId;
     return track;
   }
 
