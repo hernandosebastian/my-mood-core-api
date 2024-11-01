@@ -1,5 +1,5 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
-import request from 'supertest';
+import * as request from 'supertest';
 
 import { setupApp } from '@config/app.config';
 
