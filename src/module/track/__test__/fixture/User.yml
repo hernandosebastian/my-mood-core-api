@@ -1,0 +1,20 @@
+entity: User
+items:
+  user1:
+    id: 1
+    username: 'johnDoe'
+    externalId: '00000000-0000-0000-0000-000000000ID1'
+    roles: regular
+    isVerified: true
+    createdAt: '{{date.recent}}'
+    updatedAt: '{{date.recent}}'
+    deletedAt: null
+  user2:
+    id: 2
+    username: 'janeDoe'
+    externalId: '00000000-0000-0000-0000-000000000ID2'
+    roles: regular
+    isVerified: true
+    createdAt: '{{date.recent}}'
+    updatedAt: '{{date.recent}}'
+    deletedAt: null
