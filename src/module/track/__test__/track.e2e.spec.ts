@@ -385,12 +385,10 @@ describe('Track Module', () => {
 
       await request(app.getHttpServer())
         .delete(`/api/v1/track/${trackId}`)
-        .auth(userOneToken, { type: 'bearer' })
+        .auth(userTwoToken, { type: 'bearer' })
         .expect(HttpStatus.FORBIDDEN)
         .then(({ body }) => {
-          expect(body.message).toEqual(
-            'You are not allowed to DELETE this resource',
-          );
+          expect(body.message).toEqual('You do not own this resource');
         });
     });
 
