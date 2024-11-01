@@ -1,12 +1,31 @@
 {
   "info": {
-    "_postman_id": "57a1abea-6f1d-4398-9207-b446f95a92b6",
+    "_postman_id": "db8d23de-fcbc-4567-a9f7-bb619cb41f2d",
     "name": "my-mood-core-api",
     "description": "**POSTMAN Collection for My Mood Core API**\n\nThis collection serves as the documentation and testing suite for the core API of _My Mood_. It includes all the necessary endpoints for interacting with the system.\n\n- **Authorization**: This collection uses Bearer Token authentication. Please ensure you replace the placeholder in the Authorization section with your valid token.\n    \n- **Environment Variables**: A `BASE_URL` variable has been included to streamline API testing. Make sure to update this variable to match the appropriate server environment (e.g., development, staging, or production).",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "30335567"
   },
   "item": [
+    {
+      "name": "health",
+      "item": [
+        {
+          "name": "Get status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/health",
+              "host": ["{{BASE_URL}}"],
+              "path": ["health"]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "**Health Controller - No Authorization Required**\n\nThe Health Controller provides a simple endpoint to check the overall health and status of the application."
+    },
     {
       "name": "auth",
       "item": [
