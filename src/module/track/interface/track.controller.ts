@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -36,7 +37,7 @@ export class TrackController {
   @Get('/by-date-range')
   @Policies(ReadTrackPolicyHandler)
   async getTracksByDateRange(
-    @Body() getTracksByDateRangeDto: GetTracksByDateRangeDto,
+    @Query() getTracksByDateRangeDto: GetTracksByDateRangeDto,
     @Request() req: ExpressRequest,
   ): Promise<TrackResponseDto[]> {
     const currentUser = this.getCurrentUser(req);
@@ -73,8 +74,8 @@ export class TrackController {
     );
   }
 
-  @Policies(DeleteTrackPolicyHandler)
   @Delete(':id')
+  @Policies(DeleteTrackPolicyHandler)
   async deleteOneOrFail(@Param('id') id: number): Promise<void> {
     return this.trackService.deleteOneOrFail(id);
   }
