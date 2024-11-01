@@ -9,6 +9,7 @@ import { datasourceOptions } from '@config/orm.config';
 
 import { IamModule } from '@iam/iam.module';
 
+import { HealthController } from '@/module/health/interface/health.controller';
 import { TrackModule } from '@/module/track/track.module';
 
 @Module({
@@ -29,5 +30,6 @@ import { TrackModule } from '@/module/track/track.module';
     IamModule,
     TrackModule,
   ],
+  controllers: [HealthController],
 })
 export class AppModule {}
