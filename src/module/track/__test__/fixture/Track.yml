@@ -1,0 +1,30 @@
+entity: Track
+items:
+  track1:
+    id: 1
+    title: '{{lorem.paragraph}}'
+    description: '{{lorem.paragraph}}'
+    date: '2024-10-31T12:34:56.789Z'
+    ownerId: 1
+    createdAt: '2024-10-31T12:34:56.789Z'
+    updatedAt: '2024-10-31T12:34:56.789Z'
+    deletedAt: null
+  track2:
+    id: 2
+    title: '{{lorem.paragraph}}'
+    description: '{{lorem.paragraph}}'
+    date: '2024-10-29T12:34:56.789Z'
+    ownerId: 1
+    createdAt: '2024-10-29T12:34:56.789Z'
+    updatedAt: '2024-10-29T12:34:56.789Z'
+    deletedAt: null
+  track3:
+    id: 3
+    title: '{{lorem.paragraph}}'
+    description: '{{lorem.paragraph}}'
+    date: '2024-10-28T12:34:56.789Z'
+    ownerId: 2
+    createdAt: '2024-10-28T12:34:56.789Z'
+    updatedAt: '2024-10-28T12:34:56.789Z'
+    deletedAt: null
+

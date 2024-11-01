@@ -5,33 +5,38 @@ import { AuthorizationService } from '@iam/authorization/application/service/aut
 import { AppAction } from '@iam/authorization/domain/app-action.enum';
 import { IPolicyHandler } from '@iam/authorization/infrastructure/policy/handler/policy-handler.interface';
 import { PolicyHandlerStorage } from '@iam/authorization/infrastructure/policy/storage/policies-handler.storage';
-import { User } from '@iam/user/domain/user.entity';
 import { getCurrentUserFromRequest } from '@iam/user/domain/util/getCurrentUserFromRequest.util';
 
+import { Track } from '@/module/track/domain/track.entity';
+
 @Injectable()
-export class ReadUserPolicyHandler implements IPolicyHandler {
-  private readonly action = AppAction.Read;
+export class CreateTrackPolicyHandler implements IPolicyHandler {
+  private readonly action = AppAction.Create;
 
   constructor(
     private readonly policyHandlerStorage: PolicyHandlerStorage,
     private readonly authorizationService: AuthorizationService,
   ) {
-    this.policyHandlerStorage.add(ReadUserPolicyHandler, this);
+    this.policyHandlerStorage.add(CreateTrackPolicyHandler, this);
   }
 
-  handle(request: Request): void {
-    const currentUser = getCurrentUserFromRequest(request);
-
-    const isAllowed = this.authorizationService.isAllowed(
-      currentUser,
-      this.action,
-      User,
-    );
-
-    if (!isAllowed) {
+  async handle(request: Request): Promise<void> {
+    if (!this.hasPermission(request)) {
       throw new Error(
         `You are not allowed to ${this.action.toUpperCase()} this resource`,
       );
     }
+  }
+
+  private hasPermission(request: Request): boolean {
+    const currentUser = getCurrentUserFromRequest(request);
+
+    const hasPermission = this.authorizationService.isAllowed(
+      currentUser,
+      this.action,
+      Track,
+    );
+
+    return hasPermission;
   }
 }

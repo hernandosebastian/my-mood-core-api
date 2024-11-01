@@ -9,6 +9,7 @@ export interface IUserRepository {
   getAll(options: IGetAllOptions<User>): Promise<ICollection<User>>;
   getOneByUsername(username: string): Promise<User>;
   getOneByExternalId(externalId: string): Promise<User>;
+  getOneByIdOrFail(id: number): Promise<User>;
   getOneByUsernameOrFail(username: string): Promise<User>;
   saveOne(user: User): Promise<User>;
   updateOneOrFail(

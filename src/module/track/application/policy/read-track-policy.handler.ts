@@ -5,27 +5,28 @@ import { AuthorizationService } from '@iam/authorization/application/service/aut
 import { AppAction } from '@iam/authorization/domain/app-action.enum';
 import { IPolicyHandler } from '@iam/authorization/infrastructure/policy/handler/policy-handler.interface';
 import { PolicyHandlerStorage } from '@iam/authorization/infrastructure/policy/storage/policies-handler.storage';
-import { User } from '@iam/user/domain/user.entity';
 import { getCurrentUserFromRequest } from '@iam/user/domain/util/getCurrentUserFromRequest.util';
 
+import { Track } from '@/module/track/domain/track.entity';
+
 @Injectable()
-export class ReadUserPolicyHandler implements IPolicyHandler {
+export class ReadTrackPolicyHandler implements IPolicyHandler {
   private readonly action = AppAction.Read;
 
   constructor(
     private readonly policyHandlerStorage: PolicyHandlerStorage,
     private readonly authorizationService: AuthorizationService,
   ) {
-    this.policyHandlerStorage.add(ReadUserPolicyHandler, this);
+    this.policyHandlerStorage.add(ReadTrackPolicyHandler, this);
   }
 
-  handle(request: Request): void {
+  async handle(request: Request): Promise<void> {
     const currentUser = getCurrentUserFromRequest(request);
 
     const isAllowed = this.authorizationService.isAllowed(
       currentUser,
       this.action,
-      User,
+      Track,
     );
 
     if (!isAllowed) {
