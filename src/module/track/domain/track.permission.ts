@@ -4,10 +4,10 @@ import { IPermissionsDefinition } from '@iam/authorization/infrastructure/policy
 import { Track } from '@/module/track/domain/track.entity';
 
 export const trackPermissions: IPermissionsDefinition = {
-  regular(user, { can }) {
+  regular(_, { can }) {
     can(AppAction.Read, Track);
     can(AppAction.Create, Track);
-    can(AppAction.Update, Track, { id: user.id });
-    can(AppAction.Delete, Track, { id: user.id });
+    can(AppAction.Update, Track);
+    can(AppAction.Delete, Track);
   },
 };
