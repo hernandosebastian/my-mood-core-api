@@ -46,11 +46,14 @@ export class TrackService {
   ): Promise<TrackResponseDto> {
     await this.userService.getOneOrFail(ownerId);
 
-    const track = await this.trackRepository.saveOne(
-      this.trackMapper.fromCreateTrackDtoToTrack(createTrackDto, ownerId),
+    const track = this.trackMapper.fromCreateTrackDtoToTrack(
+      createTrackDto,
+      ownerId,
     );
 
-    return this.trackMapper.fromTrackToTrackResponseDto(track);
+    const savedTrack = await this.trackRepository.saveOne(track, ownerId);
+
+    return this.trackMapper.fromTrackToTrackResponseDto(savedTrack);
   }
 
   async updateOneOrFail(

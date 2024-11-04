@@ -3,6 +3,7 @@ import { Between, Repository } from 'typeorm';
 
 import { ITrackRepository } from '@/module/track/application/repository/track.repository.interface';
 import { Track } from '@/module/track/domain/track.entity';
+import { TrackConflictException } from '@/module/track/infrastructure/database/exception/track-conflict.exception';
 import { TrackNotFoundException } from '@/module/track/infrastructure/database/exception/track-not-found.exception';
 import { TrackSchema } from '@/module/track/infrastructure/database/track.schema';
 
@@ -11,6 +12,23 @@ export class TrackMysqlRepository implements ITrackRepository {
     @InjectRepository(TrackSchema)
     private readonly repository: Repository<Track>,
   ) {}
+
+  async existsForDate(date: Date, ownerId: number): Promise<boolean> {
+    const startOfDay = new Date(date);
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay = new Date(date);
+    endOfDay.setHours(23, 59, 59, 999);
+
+    const count = await this.repository.count({
+      where: {
+        ownerId,
+        date: Between(startOfDay, endOfDay),
+      },
+    });
+
+    return count > 0;
+  }
 
   async getTracksByDateRange(
     startDate: Date,
@@ -31,7 +49,16 @@ export class TrackMysqlRepository implements ITrackRepository {
     });
   }
 
-  async saveOne(track: Track): Promise<Track> {
+  async saveOne(track: Track, ownerId: number): Promise<Track> {
+    const trackDate = track.date;
+
+    const trackExists = await this.existsForDate(trackDate, ownerId);
+    if (trackExists) {
+      throw new TrackConflictException(
+        `A track already exists for the date ${trackDate.toDateString()}`,
+      );
+    }
+
     return this.repository.save(track);
   }
 
