@@ -266,6 +266,27 @@ describe('Track Module', () => {
           ]);
         });
     });
+
+    it('should return an error when trying to create a track on an existing date', async () => {
+      const existingTrackDate = new Date('2024-10-31T12:34:56.789Z');
+
+      const createTrackDto: ICreateTrackDto = {
+        title: 'Conflicting Track',
+        description: 'This track has a conflicting date',
+        date: existingTrackDate,
+      };
+
+      await request(app.getHttpServer())
+        .post('/api/v1/track')
+        .auth(userOneToken, { type: 'bearer' })
+        .send(createTrackDto)
+        .expect(HttpStatus.CONFLICT)
+        .then(({ body }) => {
+          expect(body.message).toEqual(
+            `A track already exists for the date ${existingTrackDate.toDateString()}`,
+          );
+        });
+    });
   });
 
   describe('PATCH - /track/:id', () => {
