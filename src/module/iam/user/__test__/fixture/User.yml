@@ -8,7 +8,7 @@ items:
     roles: admin
   user{2..23}:
     username: '{{internet.email}}'
-    nickname: '{{name.firstName}}{{index}}'
+    nickname: '{{string.uuid}}'
     avatarSrc: 'avatarSrc'
     externalId: '{{string.uuid}}'
     roles: regular
