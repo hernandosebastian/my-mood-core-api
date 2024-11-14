@@ -11,6 +11,7 @@ export interface IUserRepository {
   getOneByExternalId(externalId: string): Promise<User>;
   getOneByIdOrFail(id: number): Promise<User>;
   getOneByUsernameOrFail(username: string): Promise<User>;
+  getOneByNickname(nickname: string): Promise<User>;
   saveOne(user: User): Promise<User>;
   updateOneOrFail(
     id: number,
