@@ -86,7 +86,7 @@ export class UserMysqlRepository implements IUserRepository {
     const existingUserWithNickname = await this.getOneByNickname(user.nickname);
 
     if (existingUserWithNickname) {
-      throw new NicknameTakenException('Nickname already taken');
+      throw new NicknameTakenException(user.nickname);
     }
 
     return this.repository.save(user);
