@@ -101,6 +101,16 @@ export class UserMysqlRepository implements IUserRepository {
       throw new UserNotFoundException(`User with ID ${id} not found`);
     }
 
+    if (updates.nickname) {
+      const existingUserWithNickname = await this.getOneByNickname(
+        userToUpdate.nickname,
+      );
+
+      if (existingUserWithNickname) {
+        throw new NicknameTakenException(userToUpdate.nickname);
+      }
+    }
+
     return this.repository.save(userToUpdate);
   }
 }
