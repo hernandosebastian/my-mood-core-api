@@ -2,14 +2,19 @@ entity: User
 items:
   admin-user:
     username: 'admin@test.com'
+    nickname: 'admin'
+    avatarSrc: 'avatarSrc'
     externalId: '00000000-0000-0000-0000-00000000000X'
     roles: admin
   confirm-user:
     username: 'confirm@test.com'
+    nickname: 'confirm'
+    avatarSrc: 'avatarSrc'
     externalId: '00000000-0000-0000-0000-00000000000Y'
     roles: admin
   error-user:
     username: 'error@test.com'
+    nickname: 'error'
+    avatarSrc: 'avatarSrc'
     externalId: '00000000-0000-0000-0000-00000000000Z'
     roles: admin
-
