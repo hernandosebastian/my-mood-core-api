@@ -173,6 +173,25 @@ describe('Authentication Module', () => {
           });
       });
 
+      it('should validate nickname max length', async () => {
+        const signUpDto: SignUpDto = {
+          username: 'repeat.jane.doe@test.com',
+          nickname: 'x'.repeat(40),
+          avatarSrc: 'avatarSrc',
+          password: '$Test123',
+        };
+
+        await request(app.getHttpServer())
+          .post('/api/v1/auth/sign-up')
+          .send(signUpDto)
+          .expect(HttpStatus.BAD_REQUEST)
+          .then(({ body }) => {
+            expect(body.message).toEqual([
+              'nickname must be shorter than or equal to 35 characters',
+            ]);
+          });
+      });
+
       it('should throw an error if user already signed up', async () => {
         const externalId = '00000000-0000-0000-0000-000000000003';
         identityProviderServiceMock.signUp.mockResolvedValueOnce({
