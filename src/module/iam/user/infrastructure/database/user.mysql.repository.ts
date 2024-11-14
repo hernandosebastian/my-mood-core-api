@@ -41,21 +41,18 @@ export class UserMysqlRepository implements IUserRepository {
   async getOneByUsername(username: string): Promise<User> {
     return this.repository.findOne({
       where: { username },
-      relations: ['tracks'],
     });
   }
 
   async getOneByExternalId(externalId: string): Promise<User> {
     return this.repository.findOne({
       where: { externalId },
-      relations: ['tracks'],
     });
   }
 
   async getOneByIdOrFail(id: number): Promise<User> {
     const user = await this.repository.findOne({
       where: { id },
-      relations: ['tracks'],
     });
 
     if (!user) {
@@ -68,7 +65,6 @@ export class UserMysqlRepository implements IUserRepository {
   async getOneByUsernameOrFail(username: string) {
     const user = await this.repository.findOne({
       where: { username },
-      relations: ['tracks'],
     });
 
     if (!user) {
