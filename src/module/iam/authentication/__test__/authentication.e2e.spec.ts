@@ -244,7 +244,7 @@ describe('Authentication Module', () => {
 
       it('Should send an UserNotFound error when provided an invalid username', async () => {
         const signInDto: ISignInDto = {
-          username: 'fakeUsername',
+          username: 'fakeUsername@test.com',
           password: 'fakePassword',
         };
         const error = new UsernameNotFoundException(signInDto.username);
@@ -374,7 +374,7 @@ describe('Authentication Module', () => {
       });
 
       it('Should send an UserNotFound error when provided an invalid username', async () => {
-        const username = 'fakeUsername';
+        const username = 'fakeUsername@test.com';
         const error = new UsernameNotFoundException(username);
         const confirmUserDto: IConfirmUserDto = {
           username,
@@ -457,7 +457,7 @@ describe('Authentication Module', () => {
           });
       });
       it("Should respond with an UserNotFoundException when the user doesn't exist", async () => {
-        const username = 'fakeUsername';
+        const username = 'fakeUsername@test.com';
         const error = new UsernameNotFoundException(username);
         const forgotPasswordDto: IForgotPasswordDto = { username };
         await request(app.getHttpServer())
@@ -620,7 +620,7 @@ describe('Authentication Module', () => {
           });
       });
       it("Should respond with an UserNotFoundException when the user doesn't exist", async () => {
-        const username = 'fakeUsername';
+        const username = 'fakeUsername@test.com';
         const error = new UsernameNotFoundException(username);
         const forgotPasswordDto: IForgotPasswordDto = { username };
         await request(app.getHttpServer())
