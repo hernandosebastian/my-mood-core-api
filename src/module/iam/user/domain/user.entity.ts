@@ -1,3 +1,5 @@
+import { Exclude } from 'class-transformer';
+
 import { Base } from '@common/base/domain/base.entity';
 
 import { AppRole } from '@iam/authorization/domain/app-role.enum';
@@ -11,6 +13,8 @@ export class User extends Base {
   externalId?: string;
   roles: AppRole[];
   isVerified: boolean;
+
+  @Exclude()
   tracks?: Track[];
 
   constructor(
