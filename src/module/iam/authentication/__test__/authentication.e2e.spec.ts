@@ -200,6 +200,21 @@ describe('Authentication Module', () => {
           });
       });
 
+      it('Should respond with an error when username is not an email', async () => {
+        const signUpDto: ISignUpDto = {
+          username: 'username',
+          password: '123456',
+        };
+
+        await request(app.getHttpServer())
+          .post('/api/v1/auth/sign-up')
+          .send(signUpDto)
+          .expect(HttpStatus.BAD_REQUEST)
+          .then(({ body }) => {
+            expect(body.message).toEqual(['username must be an email']);
+          });
+      });
+
       it('Should throw an error if password is invalid', async () => {
         const error = new PasswordValidationException(
           PASSWORD_VALIDATION_ERROR,
@@ -242,9 +257,23 @@ describe('Authentication Module', () => {
           });
       });
 
+      it('Should respond with an error when username is not an email', async () => {
+        const signInDto: ISignInDto = {
+          username: 'username',
+          password: '123456',
+        };
+
+        await request(app.getHttpServer())
+          .post('/api/v1/auth/sign-in')
+          .send(signInDto)
+          .expect(HttpStatus.BAD_REQUEST)
+          .then(({ body }) => {
+            expect(body.message).toEqual(['username must be an email']);
+          });
+      });
       it('Should send an UserNotFound error when provided an invalid username', async () => {
         const signInDto: ISignInDto = {
-          username: 'fakeUsername',
+          username: 'fakeUsername@test.com',
           password: 'fakePassword',
         };
         const error = new UsernameNotFoundException(signInDto.username);
@@ -351,7 +380,20 @@ describe('Authentication Module', () => {
             expect(body).toEqual(expectedResponse);
           });
       });
+      it('Should respond with an error when username is not an email', async () => {
+        const confirmUserDto: IConfirmUserDto = {
+          username: 'fakeUsername',
+          code: '123456',
+        };
 
+        await request(app.getHttpServer())
+          .post('/api/v1/auth/confirm-user')
+          .send(confirmUserDto)
+          .expect(HttpStatus.BAD_REQUEST)
+          .then(({ body }) => {
+            expect(body.message).toEqual(['username must be an email']);
+          });
+      });
       it('Should send a UserAlreadyConfirmed error when trying to confirm a confirmed user', async () => {
         const username = 'confirm@test.com';
         const error = new UserAlreadyConfirmed(USER_ALREADY_CONFIRMED_ERROR);
@@ -374,7 +416,7 @@ describe('Authentication Module', () => {
       });
 
       it('Should send an UserNotFound error when provided an invalid username', async () => {
-        const username = 'fakeUsername';
+        const username = 'fakeUsername@test.com';
         const error = new UsernameNotFoundException(username);
         const confirmUserDto: IConfirmUserDto = {
           username,
@@ -456,8 +498,21 @@ describe('Authentication Module', () => {
             expect(body.success).toEqual(true);
           });
       });
+      it('Should respond with an error when username is not an email', async () => {
+        const forgotPasswordDto: IForgotPasswordDto = {
+          username: 'username',
+        };
+
+        await request(app.getHttpServer())
+          .post(url)
+          .send(forgotPasswordDto)
+          .expect(HttpStatus.BAD_REQUEST)
+          .then(({ body }) => {
+            expect(body.message).toEqual(['username must be an email']);
+          });
+      });
       it("Should respond with an UserNotFoundException when the user doesn't exist", async () => {
-        const username = 'fakeUsername';
+        const username = 'fakeUsername@test.com';
         const error = new UsernameNotFoundException(username);
         const forgotPasswordDto: IForgotPasswordDto = { username };
         await request(app.getHttpServer())
@@ -503,6 +558,21 @@ describe('Authentication Module', () => {
           .expect(HttpStatus.OK)
           .then(({ body }) => {
             expect(body.success).toEqual(true);
+          });
+      });
+      it('Should respond with an error when username is not an email', async () => {
+        const confirmPasswordDto: IConfirmPasswordDto = {
+          username: 'username',
+          code: '123456',
+          newPassword: 'password',
+        };
+
+        await request(app.getHttpServer())
+          .post(url)
+          .send(confirmPasswordDto)
+          .expect(HttpStatus.BAD_REQUEST)
+          .then(({ body }) => {
+            expect(body.message).toEqual(['username must be an email']);
           });
       });
       it('Should respond with a CodeMismatchError when the code is invalid', async () => {
@@ -619,8 +689,19 @@ describe('Authentication Module', () => {
             expect(body.success).toEqual(true);
           });
       });
+      it('Should respond with an UsernameNotValidException when it is not an email', async () => {
+        const username = 'username';
+        const forgotPasswordDto: IForgotPasswordDto = { username };
+        await request(app.getHttpServer())
+          .post(url)
+          .send(forgotPasswordDto)
+          .expect(HttpStatus.BAD_REQUEST)
+          .then(({ body }) => {
+            expect(body.message).toEqual(['username must be an email']);
+          });
+      });
       it("Should respond with an UserNotFoundException when the user doesn't exist", async () => {
-        const username = 'fakeUsername';
+        const username = 'fakeUsername@test.com';
         const error = new UsernameNotFoundException(username);
         const forgotPasswordDto: IForgotPasswordDto = { username };
         await request(app.getHttpServer())
