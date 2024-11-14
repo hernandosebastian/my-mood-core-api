@@ -3,6 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { CollectionDto } from '@common/base/application/dto/collection.dto';
 import { IGetAllOptions } from '@common/base/application/interface/get-all-options.interface';
 
+import { IUpdateUserDto } from '@iam/user/application/dto/update-user.dto.interface';
 import { UserResponseDto } from '@iam/user/application/dto/user-response.dto';
 import { UserMapper } from '@iam/user/application/mapper/user.mapper';
 import {
@@ -33,6 +34,18 @@ export class UserService {
 
   async getOneOrFail(id: number): Promise<UserResponseDto> {
     const user = await this.userRepository.getOneByIdOrFail(id);
+
+    return this.userMapper.fromUserToUserResponseDto(user);
+  }
+
+  async updateOneOrFail(
+    id: number,
+    updateUserDto: IUpdateUserDto,
+  ): Promise<UserResponseDto> {
+    const user = await this.userRepository.updateOneOrFail(
+      id,
+      this.userMapper.fromUpdateUserDtoToPartialUser(updateUserDto),
+    );
 
     return this.userMapper.fromUserToUserResponseDto(user);
   }

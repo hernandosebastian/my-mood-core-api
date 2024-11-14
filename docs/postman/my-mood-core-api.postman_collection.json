@@ -189,7 +189,29 @@
       "name": "user",
       "item": [
         {
-          "name": "me",
+          "name": "Update",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nickname\": \"{{$randomUserName}}\",\r\n    \"avatarSrc\": \"{{$randomImageUrl}}\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/user/me",
+              "host": ["{{BASE_URL}}"],
+              "path": ["user", "me"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Me",
           "request": {
             "method": "GET",
             "header": [],
@@ -339,3 +361,4 @@
     }
   ]
 }
+

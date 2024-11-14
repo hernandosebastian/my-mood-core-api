@@ -1,14 +1,35 @@
 entity: User
 items:
-  admin-user:
+  user1:
+    id: 1
     username: 'admin@test.com'
     nickname: 'admin'
     avatarSrc: 'avatarSrc'
     externalId: '00000000-0000-0000-0000-00000000000X'
+    isVerified: true
     roles: admin
-  user{2..23}:
+    createdAt: '{{date.recent}}'
+    updatedAt: '{{date.recent}}'
+    deletedAt: null
+  user2:
+    id: 2
+    username: 'regular@test.com'
+    nickname: 'regular'
+    avatarSrc: 'avatarSrc'
+    externalId: '00000000-0000-0000-0000-00000000000Y'
+    isVerified: true
+    roles: regular
+    createdAt: '{{date.recent}}'
+    updatedAt: '{{date.recent}}'
+    deletedAt: null
+  user{3..23}:
+    id: '{{number.int}}'
     username: '{{internet.email}}'
     nickname: '{{string.uuid}}'
     avatarSrc: 'avatarSrc'
     externalId: '{{string.uuid}}'
+    isVerified: true
     roles: regular
+    createdAt: '{{date.recent}}'
+    updatedAt: '{{date.recent}}'
+    deletedAt: null
