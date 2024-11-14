@@ -6,6 +6,7 @@ import { IGetAllOptions } from '@common/base/application/interface/get-all-optio
 
 import { IUserRepository } from '@iam/user/application/repository/user.repository.interface';
 import { User } from '@iam/user/domain/user.entity';
+import { NicknameTakenException } from '@iam/user/infrastructure/database/exception/nickname-taken.exception';
 import { UserNotFoundException } from '@iam/user/infrastructure/database/exception/user-not-found.exception';
 import { UserSchema } from '@iam/user/infrastructure/database/user.schema';
 
@@ -77,7 +78,17 @@ export class UserMysqlRepository implements IUserRepository {
     return user;
   }
 
+  async getOneByNickname(nickname: string): Promise<User> {
+    return this.repository.findOne({ where: { nickname } });
+  }
+
   async saveOne(user: User): Promise<User> {
+    const existingUserWithNickname = await this.getOneByNickname(user.nickname);
+
+    if (existingUserWithNickname) {
+      throw new NicknameTakenException(user.nickname);
+    }
+
     return this.repository.save(user);
   }
 

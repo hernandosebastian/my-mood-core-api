@@ -37,6 +37,7 @@ import { NewPasswordRequiredException } from '@iam/authentication/infrastructure
 import { PasswordValidationException } from '@iam/authentication/infrastructure/cognito/exception/password-validation.exception';
 import { UnexpectedErrorCodeException } from '@iam/authentication/infrastructure/cognito/exception/unexpected-code.exception';
 import { UserNotConfirmedException } from '@iam/authentication/infrastructure/cognito/exception/user-not-confirmed.exception';
+import { NicknameTakenException } from '@iam/user/infrastructure/database/exception/nickname-taken.exception';
 import { UsernameNotFoundException } from '@iam/user/infrastructure/database/exception/username-not-found.exception';
 
 import {
@@ -119,6 +120,8 @@ describe('Authentication Module', () => {
 
         const signUpDto = {
           username: 'john.doe@test.com',
+          nickname: 'john',
+          avatarSrc: 'avatarSrc',
           password: '$Test123',
         } as SignUpDto;
 
@@ -142,6 +145,8 @@ describe('Authentication Module', () => {
 
         const signUpDto = {
           username: 'jane.doe@test.com',
+          nickname: 'jane',
+          avatarSrc: 'avatarSrc',
           password: '$Test123',
         } as SignUpDto;
 
@@ -176,6 +181,8 @@ describe('Authentication Module', () => {
 
         const signUpDto = {
           username: 'thomas.doe@test.com',
+          nickname: 'thomas',
+          avatarSrc: 'avatarSrc',
           password: '$Test123',
         } as SignUpDto;
 
@@ -203,6 +210,8 @@ describe('Authentication Module', () => {
       it('Should respond with an error when username is not an email', async () => {
         const signUpDto: ISignUpDto = {
           username: 'username',
+          nickname: 'username',
+          avatarSrc: 'avatarSrc',
           password: '123456',
         };
 
@@ -222,6 +231,8 @@ describe('Authentication Module', () => {
         identityProviderServiceMock.signUp.mockRejectedValueOnce(error);
         const signUpDto: ISignUpDto = {
           username: 'some@account.com',
+          nickname: 'some',
+          avatarSrc: 'avatarSrc',
           password: '123456',
         };
 
@@ -229,6 +240,25 @@ describe('Authentication Module', () => {
           .post('/api/v1/auth/sign-up')
           .send(signUpDto)
           .expect(HttpStatus.BAD_REQUEST)
+          .then(({ body }) => {
+            expect(body.message).toEqual(error.message);
+          });
+      });
+
+      it('Should throw an error if nickname is already in use', async () => {
+        const signUpDto = {
+          username: 'jane.doe.admin@test.com',
+          nickname: 'admin',
+          avatarSrc: 'avatarSrc',
+          password: '$Test123',
+        } as SignUpDto;
+
+        const error = new NicknameTakenException(signUpDto.nickname);
+
+        await request(app.getHttpServer())
+          .post('/api/v1/auth/sign-up')
+          .send(signUpDto)
+          .expect(HttpStatus.CONFLICT)
           .then(({ body }) => {
             expect(body.message).toEqual(error.message);
           });

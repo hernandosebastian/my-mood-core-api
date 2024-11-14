@@ -11,6 +11,12 @@ export class UserResponseDto {
   @ApiProperty()
   username: string;
 
+  @ApiProperty()
+  nickname: string;
+
+  @ApiProperty()
+  avatarSrc: string;
+
   @ApiPropertyOptional()
   externalId?: string;
 

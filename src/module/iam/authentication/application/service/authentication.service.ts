@@ -36,16 +36,22 @@ export class AuthenticationService {
   ) {}
 
   async handleSignUp(signUpDto: ISignUpDto): Promise<UserResponseDto> {
-    const { username, password } = signUpDto;
+    const { username, nickname, avatarSrc, password } = signUpDto;
 
     const existingUser = await this.userRepository.getOneByUsername(username);
 
     if (!existingUser) {
-      return this.signUpAndSave(username, password);
+      return this.signUpAndSave(username, nickname, avatarSrc, password);
     }
 
     if (!existingUser.externalId) {
-      return this.signUpAndSave(username, password, existingUser.id);
+      return this.signUpAndSave(
+        username,
+        nickname,
+        avatarSrc,
+        password,
+        existingUser.id,
+      );
     }
 
     throw new UserAlreadySignedUp('User already signed up');
@@ -53,6 +59,8 @@ export class AuthenticationService {
 
   private async signUpAndSave(
     username: string,
+    nickname: string,
+    avatarSrc: string,
     password: string,
     userId?: number,
   ): Promise<UserResponseDto> {
@@ -60,7 +68,9 @@ export class AuthenticationService {
 
     if (!userToSaveId) {
       userToSaveId = (
-        await this.userRepository.saveOne(new User(username, [AppRole.Regular]))
+        await this.userRepository.saveOne(
+          new User(username, nickname, avatarSrc, [AppRole.Regular]),
+        )
       ).id;
     }
 

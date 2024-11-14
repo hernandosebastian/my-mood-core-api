@@ -3,6 +3,8 @@ items:
   user1:
     id: 1
     username: 'johnDoe'
+    nickname: 'john'
+    avatarSrc: 'avatarSrc'
     externalId: '00000000-0000-0000-0000-000000000ID1'
     roles: regular
     isVerified: true
@@ -12,6 +14,8 @@ items:
   user2:
     id: 2
     username: 'janeDoe'
+    nickname: 'jane'
+    avatarSrc: 'avatarSrc'
     externalId: '00000000-0000-0000-0000-000000000ID2'
     roles: regular
     isVerified: true

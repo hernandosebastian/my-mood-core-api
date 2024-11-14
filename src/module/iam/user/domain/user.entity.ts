@@ -6,6 +6,8 @@ import { Track } from '@/module/track/domain/track.entity';
 
 export class User extends Base {
   username: string;
+  nickname: string;
+  avatarSrc: string;
   externalId?: string;
   roles: AppRole[];
   isVerified: boolean;
@@ -13,6 +15,8 @@ export class User extends Base {
 
   constructor(
     username: string,
+    nickname: string,
+    avatarSrc: string,
     roles: AppRole[],
     tracks?: Track[],
     options?: {
@@ -31,6 +35,8 @@ export class User extends Base {
       options?.deletedAt,
     );
     this.username = username;
+    this.nickname = nickname;
+    this.avatarSrc = avatarSrc;
     this.externalId = options?.externalId;
     this.roles = roles;
     this.isVerified = options?.isVerified;

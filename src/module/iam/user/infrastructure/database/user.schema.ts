@@ -13,6 +13,13 @@ export const UserSchema = new EntitySchema<User>({
       type: String,
       unique: true,
     },
+    nickname: {
+      type: String,
+      unique: true,
+    },
+    avatarSrc: {
+      type: String,
+    },
     externalId: {
       type: String,
       unique: true,
