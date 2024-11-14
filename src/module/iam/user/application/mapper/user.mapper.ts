@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
+import { IUpdateUserDto } from '@iam/user/application/dto/update-user.dto.interface';
 import { UserResponseDto } from '@iam/user/application/dto/user-response.dto';
 import { User } from '@iam/user/domain/user.entity';
 
@@ -17,5 +18,20 @@ export class UserMapper {
     userResponseDto.updatedAt = user.updatedAt;
     userResponseDto.deletedAt = user.deletedAt;
     return userResponseDto;
+  }
+
+  fromUpdateUserDtoToPartialUser(
+    updateUserDto: IUpdateUserDto,
+  ): Partial<Omit<User, 'id'>> {
+    const updates: Partial<Omit<User, 'id'>> = {};
+    if (updateUserDto.nickname) {
+      updates.nickname = updateUserDto.nickname;
+    }
+
+    if (updateUserDto.avatarSrc) {
+      updates.avatarSrc = updateUserDto.avatarSrc;
+    }
+
+    return updates;
   }
 }
