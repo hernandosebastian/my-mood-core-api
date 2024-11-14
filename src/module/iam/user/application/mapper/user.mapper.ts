@@ -9,9 +9,10 @@ export class UserMapper {
     const userResponseDto = new UserResponseDto();
     userResponseDto.id = user.id;
     userResponseDto.username = user.username;
+    userResponseDto.nickname = user.nickname;
+    userResponseDto.avatarSrc = user.avatarSrc;
     userResponseDto.externalId = user.externalId;
     userResponseDto.roles = user.roles;
-    userResponseDto.tracks = user.tracks;
     userResponseDto.createdAt = user.createdAt;
     userResponseDto.updatedAt = user.updatedAt;
     userResponseDto.deletedAt = user.deletedAt;
