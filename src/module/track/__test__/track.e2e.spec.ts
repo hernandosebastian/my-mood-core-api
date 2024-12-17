@@ -43,6 +43,56 @@ describe('Track Module', () => {
     await app.close();
   });
 
+  describe('GET - /track/stats', () => {
+    const userThreeToken = createAccessToken({
+      sub: '00000000-0000-0000-0000-000000000ID3',
+      username: 'bobDoe',
+    });
+
+    const userFourToken = createAccessToken({
+      sub: '00000000-0000-0000-0000-000000000ID4',
+      username: 'aliceDoe',
+    });
+
+    it('should return track stats without tracks', async () => {
+      await request(app.getHttpServer())
+        .get('/api/v1/track/stats')
+        .auth(userThreeToken, { type: 'bearer' })
+        .expect(HttpStatus.OK)
+        .then(({ body }) => {
+          expect(body).toEqual({
+            totalTrackStats: [],
+            tracksLast3MonthsStats: [],
+          });
+        });
+    });
+
+    it('should return track stats with tracks', async () => {
+      await request(app.getHttpServer())
+        .get('/api/v1/track/stats')
+        .auth(userFourToken, { type: 'bearer' })
+        .expect(HttpStatus.OK)
+        .then(({ body }) => {
+          expect(body).toEqual({
+            totalTrackStats: [
+              { mood: 'Happy', totalTracks: 3, daysTracked: 3 },
+              { mood: 'Sad', totalTracks: 2, daysTracked: 2 },
+              { mood: 'Excited', totalTracks: 2, daysTracked: 2 },
+              { mood: 'Angry', totalTracks: 2, daysTracked: 2 },
+              { mood: 'Calm', totalTracks: 1, daysTracked: 1 },
+            ],
+            tracksLast3MonthsStats: [
+              { year: '2024', month: '12', mood: 'Happy', totalTracks: 3 },
+              { year: '2024', month: '11', mood: 'Sad', totalTracks: 2 },
+              { year: '2024', month: '11', mood: 'Calm', totalTracks: 1 },
+              { year: '2024', month: '10', mood: 'Angry', totalTracks: 2 },
+              { year: '2024', month: '10', mood: 'Excited', totalTracks: 1 },
+            ],
+          });
+        });
+    });
+  });
+
   describe('GET - /track/by-date-range', () => {
     it('should return all tracks by date range', async () => {
       const getTracksByDateRangeDto: GetTracksByDateRangeDto = {
