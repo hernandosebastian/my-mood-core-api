@@ -3,6 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { UserService } from '@iam/user/application/service/user.service';
 
 import { ICreateTrackDto } from '@/module/track/application/dto/create-track.dto.interface';
+import { IGetTrackStatsResponseDto } from '@/module/track/application/dto/get-track-stats-response.interface';
 import { GetTracksByDateRangeDto } from '@/module/track/application/dto/get-tracks-by-date-range.dto';
 import { TrackResponseDto } from '@/module/track/application/dto/track-response.dto';
 import { IUpdateTrackDto } from '@/module/track/application/dto/update-track.dto.interface';
@@ -20,6 +21,19 @@ export class TrackService {
     private readonly userService: UserService,
     private readonly trackMapper: TrackMapper,
   ) {}
+
+  async getTrackStats(ownerId: number): Promise<IGetTrackStatsResponseDto> {
+    const totalTrackStats =
+      await this.trackRepository.getTotalTrackStats(ownerId);
+
+    const tracksLast3MonthsStats =
+      await this.trackRepository.getTracksLast3MonthsStats(ownerId);
+
+    return {
+      totalTrackStats,
+      tracksLast3MonthsStats,
+    };
+  }
 
   async getTracksByDateRange(
     getTracksByDateRangeDto: GetTracksByDateRangeDto,
