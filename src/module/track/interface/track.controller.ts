@@ -19,6 +19,7 @@ import { User } from '@iam/user/domain/user.entity';
 import { getCurrentUserFromRequest } from '@iam/user/domain/util/getCurrentUserFromRequest.util';
 
 import { CreateTrackDto } from '@/module/track/application/dto/create-track.dto';
+import { IGetTrackStatsResponseDto } from '@/module/track/application/dto/get-track-stats-response.interface';
 import { GetTracksByDateRangeDto } from '@/module/track/application/dto/get-tracks-by-date-range.dto';
 import { TrackResponseDto } from '@/module/track/application/dto/track-response.dto';
 import { UpdateTrackDto } from '@/module/track/application/dto/update-track.dto';
@@ -33,6 +34,15 @@ import { TrackService } from '@/module/track/application/service/track.service';
 @ApiTags('track')
 export class TrackController {
   constructor(private readonly trackService: TrackService) {}
+
+  @Get('/stats')
+  @Policies(ReadTrackPolicyHandler)
+  async getTrackStats(
+    @Request() req: ExpressRequest,
+  ): Promise<IGetTrackStatsResponseDto> {
+    const currentUser = this.getCurrentUser(req);
+    return this.trackService.getTrackStats(currentUser.id);
+  }
 
   @Get('/by-date-range')
   @Policies(ReadTrackPolicyHandler)
