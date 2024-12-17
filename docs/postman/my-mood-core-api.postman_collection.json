@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "db8d23de-fcbc-4567-a9f7-bb619cb41f2d",
+    "_postman_id": "00f15dd1-91a5-4d02-abfa-253256115e3c",
     "name": "my-mood-core-api",
     "description": "**POSTMAN Collection for My Mood Core API**\n\nThis collection serves as the documentation and testing suite for the core API of _My Mood_. It includes all the necessary endpoints for interacting with the system.\n\n- **Authorization**: This collection uses Bearer Token authentication. Please ensure you replace the placeholder in the Authorization section with your valid token.\n    \n- **Environment Variables**: A `BASE_URL` variable has been included to streamline API testing. Make sure to update this variable to match the appropriate server environment (e.g., development, staging, or production).",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -230,6 +230,19 @@
       "name": "track",
       "item": [
         {
+          "name": "Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/track/stats",
+              "host": ["{{BASE_URL}}"],
+              "path": ["track", "stats"]
+            }
+          },
+          "response": []
+        },
+        {
           "name": "By date range",
           "request": {
             "method": "GET",
@@ -361,4 +374,3 @@
     }
   ]
 }
-
