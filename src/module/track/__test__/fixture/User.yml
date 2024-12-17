@@ -22,3 +22,25 @@ items:
     createdAt: '{{date.recent}}'
     updatedAt: '{{date.recent}}'
     deletedAt: null
+  user3:
+    id: 3
+    username: 'bobDoe'
+    nickname: 'bob'
+    avatarSrc: 'avatarSrc'
+    externalId: '00000000-0000-0000-0000-000000000ID3'
+    roles: regular
+    isVerified: true
+    createdAt: '{{date.recent}}'
+    updatedAt: '{{date.recent}}'
+    deletedAt: null
+  user4:
+    id: 4
+    username: 'aliceDoe'
+    nickname: 'alice'
+    avatarSrc: 'avatarSrc'
+    externalId: '00000000-0000-0000-0000-000000000ID4'
+    roles: regular
+    isVerified: true
+    createdAt: '{{date.recent}}'
+    updatedAt: '{{date.recent}}'
+    deletedAt: null
