@@ -38,10 +38,14 @@ export class TrackController {
   @Get('/stats')
   @Policies(ReadTrackPolicyHandler)
   async getTrackStats(
+    @Query() getTracksByDateRangeDto: GetTracksByDateRangeDto,
     @Request() req: ExpressRequest,
   ): Promise<IGetTrackStatsResponseDto> {
     const currentUser = this.getCurrentUser(req);
-    return this.trackService.getTrackStats(currentUser.id);
+    return this.trackService.getTrackStats(
+      getTracksByDateRangeDto,
+      currentUser.id,
+    );
   }
 
   @Get('/by-date-range')

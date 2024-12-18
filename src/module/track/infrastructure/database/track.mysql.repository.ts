@@ -1,10 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between, Repository } from 'typeorm';
 
-import { ENVIRONMENT } from '@config/environment.enum';
-
 import { ITrackStats } from '@/module/track/application/dto/total-track-stats-response.interface';
-import { ITrackMonthlyStats } from '@/module/track/application/dto/track-monthly-stats.response.interface';
 import { ITrackRepository } from '@/module/track/application/repository/track.repository.interface';
 import { Track } from '@/module/track/domain/track.entity';
 import { TrackConflictException } from '@/module/track/infrastructure/database/exception/track-conflict.exception';
@@ -20,65 +17,11 @@ export class TrackMysqlRepository implements ITrackRepository {
   async getTotalTrackStats(ownerId: number): Promise<ITrackStats[]> {
     return await this.repository
       .createQueryBuilder('track')
-      .select([
-        'track.title AS mood',
-        'COUNT(track.id) AS totalTracks',
-        'COUNT(DISTINCT DATE(track.date)) AS daysTracked',
-      ])
       .where('track.ownerId = :ownerId', { ownerId })
+      .select(['track.title AS mood', 'COUNT(track.id) AS totalTracks'])
       .groupBy('track.title')
       .orderBy('totalTracks', 'DESC')
       .getRawMany();
-  }
-
-  async getTracksLast3MonthsStats(
-    ownerId: number,
-  ): Promise<ITrackMonthlyStats[]> {
-    const environment = process.env.NODE_ENV || ENVIRONMENT.DEVELOPMENT;
-
-    if (environment === ENVIRONMENT.AUTOMATED_TESTS) {
-      return await this.repository
-        .createQueryBuilder('track')
-        .select([
-          "strftime('%Y', track.date) AS year",
-          "strftime('%m', track.date) AS month",
-          'track.title AS mood',
-          'COUNT(track.id) AS totalTracks',
-        ])
-        .where('track.ownerId = :ownerId', { ownerId })
-        .andWhere("track.date >= DATE('now', '-3 months')")
-        .groupBy(
-          "strftime('%Y', track.date), strftime('%m', track.date), track.title",
-        )
-        .orderBy('year', 'DESC')
-        .addOrderBy('month', 'DESC')
-        .addOrderBy('totalTracks', 'DESC')
-        .getRawMany();
-    }
-
-    if (
-      environment === ENVIRONMENT.PRODUCTION ||
-      environment === ENVIRONMENT.STAGING ||
-      environment === ENVIRONMENT.DEVELOPMENT
-    ) {
-      return await this.repository
-        .createQueryBuilder('track')
-        .select([
-          'EXTRACT(YEAR FROM track.date) AS year',
-          'EXTRACT(MONTH FROM track.date) AS month',
-          'track.title AS mood',
-          'COUNT(track.id) AS totalTracks',
-        ])
-        .where('track.ownerId = :ownerId', { ownerId })
-        .andWhere('track.date >= CURRENT_DATE - INTERVAL 3 MONTH')
-        .groupBy(
-          'EXTRACT(YEAR FROM track.date), EXTRACT(MONTH FROM track.date), track.title',
-        )
-        .orderBy('year', 'DESC')
-        .addOrderBy('month', 'DESC')
-        .addOrderBy('totalTracks', 'DESC')
-        .getRawMany();
-    }
   }
 
   async existsForDate(date: Date, ownerId: number): Promise<boolean> {
