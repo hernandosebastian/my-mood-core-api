@@ -10,6 +10,7 @@ import { testModuleBootstrapper } from '@test/test.module.bootstrapper';
 import { createAccessToken } from '@test/test.util';
 
 import { ICreateTrackDto } from '@/module/track/application/dto/create-track.dto.interface';
+import { IGetTrackStatsResponseDto } from '@/module/track/application/dto/get-track-stats-response.interface';
 import { GetTracksByDateRangeDto } from '@/module/track/application/dto/get-tracks-by-date-range.dto';
 import { UpdateTrackDto } from '@/module/track/application/dto/update-track.dto';
 
@@ -55,40 +56,117 @@ describe('Track Module', () => {
     });
 
     it('should return track stats without tracks', async () => {
+      const getTracksByDateRangeDto: GetTracksByDateRangeDto = {
+        startDate: '2024-10-01T00:00:00.000Z',
+        endDate: '2024-12-31T23:59:59.999Z',
+      };
+
+      const expectedResponse: IGetTrackStatsResponseDto = {
+        totalTrackStats: [],
+        tracksLast3MonthsStats: [],
+      };
+
       await request(app.getHttpServer())
-        .get('/api/v1/track/stats')
+        .get(
+          `/api/v1/track/stats?startDate=${getTracksByDateRangeDto.startDate}&endDate=${getTracksByDateRangeDto.endDate}`,
+        )
         .auth(userThreeToken, { type: 'bearer' })
         .expect(HttpStatus.OK)
         .then(({ body }) => {
-          expect(body).toEqual({
-            totalTrackStats: [],
-            tracksLast3MonthsStats: [],
-          });
+          expect(body).toEqual(expectedResponse);
         });
     });
 
     it('should return track stats with tracks', async () => {
+      const getTracksByDateRangeDto: GetTracksByDateRangeDto = {
+        startDate: '2024-10-01T00:00:00.000Z',
+        endDate: '2024-12-31T23:59:59.999Z',
+      };
+
+      const expectedResponse: IGetTrackStatsResponseDto = {
+        totalTrackStats: [
+          { mood: 'Happy', totalTracks: 3 },
+          { mood: 'Excited', totalTracks: 3 },
+          { mood: 'Sad', totalTracks: 2 },
+          { mood: 'Angry', totalTracks: 2 },
+          { mood: 'Calm', totalTracks: 1 },
+        ],
+        tracksLast3MonthsStats: [
+          {
+            year: 2024,
+            month: 12,
+            moods: [{ mood: 'Happy', totalTracks: 3 }],
+          },
+          {
+            year: 2024,
+            month: 11,
+            moods: [
+              { mood: 'Sad', totalTracks: 2 },
+              { mood: 'Calm', totalTracks: 1 },
+            ],
+          },
+          {
+            year: 2024,
+            month: 10,
+            moods: [
+              { mood: 'Angry', totalTracks: 2 },
+              { mood: 'Excited', totalTracks: 1 },
+            ],
+          },
+        ],
+      };
+
       await request(app.getHttpServer())
-        .get('/api/v1/track/stats')
+        .get(
+          `/api/v1/track/stats?startDate=${getTracksByDateRangeDto.startDate}&endDate=${getTracksByDateRangeDto.endDate}`,
+        )
         .auth(userFourToken, { type: 'bearer' })
         .expect(HttpStatus.OK)
         .then(({ body }) => {
-          expect(body).toEqual({
-            totalTrackStats: [
-              { mood: 'Happy', totalTracks: 3, daysTracked: 3 },
-              { mood: 'Sad', totalTracks: 2, daysTracked: 2 },
-              { mood: 'Excited', totalTracks: 2, daysTracked: 2 },
-              { mood: 'Angry', totalTracks: 2, daysTracked: 2 },
-              { mood: 'Calm', totalTracks: 1, daysTracked: 1 },
-            ],
-            tracksLast3MonthsStats: [
-              { year: '2024', month: '12', mood: 'Happy', totalTracks: 3 },
-              { year: '2024', month: '11', mood: 'Sad', totalTracks: 2 },
-              { year: '2024', month: '11', mood: 'Calm', totalTracks: 1 },
-              { year: '2024', month: '10', mood: 'Angry', totalTracks: 2 },
-              { year: '2024', month: '10', mood: 'Excited', totalTracks: 1 },
-            ],
-          });
+          expect(body).toEqual(expectedResponse);
+        });
+    });
+
+    it('should return track stats with total tracks stats but without last 3 months stats', async () => {
+      const firstGetTracksByDateRangeDto: GetTracksByDateRangeDto = {
+        startDate: '2026-10-01T00:00:00.000Z',
+        endDate: '2026-12-31T23:59:59.999Z',
+      };
+
+      const secondtGetTracksByDateRangeDto: GetTracksByDateRangeDto = {
+        startDate: '2021-10-01T00:00:00.000Z',
+        endDate: '2021-12-31T23:59:59.999Z',
+      };
+
+      const expectedResponse: IGetTrackStatsResponseDto = {
+        totalTrackStats: [
+          { mood: 'Happy', totalTracks: 3 },
+          { mood: 'Excited', totalTracks: 3 },
+          { mood: 'Sad', totalTracks: 2 },
+          { mood: 'Angry', totalTracks: 2 },
+          { mood: 'Calm', totalTracks: 1 },
+        ],
+        tracksLast3MonthsStats: [],
+      };
+
+      await request(app.getHttpServer())
+        .get(
+          `/api/v1/track/stats?startDate=${firstGetTracksByDateRangeDto.startDate}&endDate=${firstGetTracksByDateRangeDto.endDate}`,
+        )
+        .auth(userFourToken, { type: 'bearer' })
+        .expect(HttpStatus.OK)
+        .then(({ body }) => {
+          expect(body).toEqual(expectedResponse);
+        });
+
+      await request(app.getHttpServer())
+        .get(
+          `/api/v1/track/stats?startDate=${secondtGetTracksByDateRangeDto.startDate}&endDate=${secondtGetTracksByDateRangeDto.endDate}`,
+        )
+        .auth(userFourToken, { type: 'bearer' })
+        .expect(HttpStatus.OK)
+        .then(({ body }) => {
+          expect(body).toEqual(expectedResponse);
         });
     });
   });
