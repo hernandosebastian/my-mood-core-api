@@ -17,8 +17,8 @@ export class TrackMysqlRepository implements ITrackRepository {
   async getTotalTrackStats(ownerId: number): Promise<ITrackStats[]> {
     return await this.repository
       .createQueryBuilder('track')
-      .select(['track.title AS mood', 'COUNT(track.id) AS totalTracks'])
       .where('track.ownerId = :ownerId', { ownerId })
+      .select(['track.title AS mood', 'COUNT(track.id) AS totalTracks'])
       .groupBy('track.title')
       .orderBy('totalTracks', 'DESC')
       .getRawMany();
