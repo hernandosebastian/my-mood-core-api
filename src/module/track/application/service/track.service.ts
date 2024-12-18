@@ -5,6 +5,7 @@ import { UserService } from '@iam/user/application/service/user.service';
 import { ICreateTrackDto } from '@/module/track/application/dto/create-track.dto.interface';
 import { IGetTrackStatsResponseDto } from '@/module/track/application/dto/get-track-stats-response.interface';
 import { GetTracksByDateRangeDto } from '@/module/track/application/dto/get-tracks-by-date-range.dto';
+import { ITrackMonthlyStats } from '@/module/track/application/dto/track-monthly-stats.response.interface';
 import { TrackResponseDto } from '@/module/track/application/dto/track-response.dto';
 import { IUpdateTrackDto } from '@/module/track/application/dto/update-track.dto.interface';
 import { TrackMapper } from '@/module/track/application/mapper/track.mapper';
@@ -12,6 +13,7 @@ import {
   ITrackRepository,
   TRACK_REPOSITORY_KEY,
 } from '@/module/track/application/repository/track.repository.interface';
+import { Track } from '@/module/track/domain/track.entity';
 
 @Injectable()
 export class TrackService {
@@ -22,17 +24,70 @@ export class TrackService {
     private readonly trackMapper: TrackMapper,
   ) {}
 
-  async getTrackStats(ownerId: number): Promise<IGetTrackStatsResponseDto> {
+  async getTrackStats(
+    getTracksByDateRangeDto: GetTracksByDateRangeDto,
+    ownerId: number,
+  ): Promise<IGetTrackStatsResponseDto> {
+    const startDate = new Date(getTracksByDateRangeDto.startDate);
+    const endDate = new Date(getTracksByDateRangeDto.endDate);
+
     const totalTrackStats =
       await this.trackRepository.getTotalTrackStats(ownerId);
-
     const tracksLast3MonthsStats =
-      await this.trackRepository.getTracksLast3MonthsStats(ownerId);
+      await this.trackRepository.getTracksByDateRange(
+        startDate,
+        endDate,
+        ownerId,
+      );
+
+    const groupedStats = this.groupStatsByMonth(tracksLast3MonthsStats);
 
     return {
       totalTrackStats,
-      tracksLast3MonthsStats,
+      tracksLast3MonthsStats: groupedStats,
     };
+  }
+
+  private groupStatsByMonth(tracks: Track[]): ITrackMonthlyStats[] {
+    const groupedStats: { [key: string]: { [title: string]: number } } = {};
+
+    tracks.forEach((track) => {
+      const date = track.date;
+      const month = date.getMonth() + 1;
+      const year = date.getFullYear();
+      const title = track.title;
+
+      const key = `${year}-${month}`;
+
+      if (!groupedStats[key]) {
+        groupedStats[key] = {};
+      }
+
+      if (!groupedStats[key][title]) {
+        groupedStats[key][title] = 0;
+      }
+      groupedStats[key][title]++;
+    });
+
+    const result: ITrackMonthlyStats[] = Object.keys(groupedStats).map(
+      (key) => {
+        const [year, month] = key.split('-').map(Number);
+        const moods = Object.entries(groupedStats[key]).map(
+          ([title, totalTracks]) => ({
+            mood: title,
+            totalTracks,
+          }),
+        );
+
+        return {
+          month,
+          year,
+          moods,
+        };
+      },
+    );
+
+    return result;
   }
 
   async getTracksByDateRange(
