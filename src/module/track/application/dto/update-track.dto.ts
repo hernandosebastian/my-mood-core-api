@@ -7,7 +7,6 @@ export class UpdateTrackDto {
   @ApiPropertyOptional()
   @IsString()
   @IsOptional()
-  @MaxLength(100)
   @IsEnum(Mood)
   title?: Mood;
 

@@ -15,7 +15,6 @@ export class CreateTrackDto implements Partial<ICreateTrackDto> {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  @MaxLength(100)
   @IsEnum(Mood)
   title: Mood;
 
