@@ -302,6 +302,25 @@ describe('Track Module', () => {
         });
     });
 
+    it('should return a validation error for title not valid enum', async () => {
+      const createTrackDto = {
+        title: 'Invalid Mood',
+        description: 'This is a new track',
+        date: new Date('2024-11-15T12:34:56.789Z'),
+      };
+
+      await request(app.getHttpServer())
+        .post('/api/v1/track')
+        .auth(userOneToken, { type: 'bearer' })
+        .send(createTrackDto)
+        .expect(HttpStatus.BAD_REQUEST)
+        .then(({ body }) => {
+          expect(body.message).toEqual([
+            'title must be one of the following values: Happy, Sad, Angry, Excited, Anxious, Calm, Confused, Bored',
+          ]);
+        });
+    });
+
     it('should return a validation error for missing title', async () => {
       const createTrackDto = {
         description: 'This is a new track',
@@ -315,7 +334,7 @@ describe('Track Module', () => {
         .expect(HttpStatus.BAD_REQUEST)
         .then(({ body }) => {
           expect(body.message).toEqual([
-            'title must be shorter than or equal to 100 characters',
+            'title must be one of the following values: Happy, Sad, Angry, Excited, Anxious, Calm, Confused, Bored',
             'title should not be empty',
             'title must be a string',
           ]);
@@ -324,7 +343,7 @@ describe('Track Module', () => {
 
     it('should return a validation error for missing date', async () => {
       const createTrackDto = {
-        title: 'New Track',
+        title: Mood.HAPPY,
         description: 'This is a new track',
       };
 
@@ -343,7 +362,7 @@ describe('Track Module', () => {
 
     it('should return a validation error for invalid date format', async () => {
       const createTrackDto = {
-        title: 'New Track',
+        title: Mood.HAPPY,
         description: 'This is a new track',
         date: 'invalidDate',
       };
@@ -427,21 +446,21 @@ describe('Track Module', () => {
         });
     });
 
-    it('should return a validation error for invalid title', async () => {
-      const updateTrackDto = {
-        title: 'a'.repeat(101),
+    it('should return a validation error for title not valid enum', async () => {
+      const createTrackDto = {
+        title: 'Invalid Mood',
       };
 
-      const trackId = 1;
-
       await request(app.getHttpServer())
-        .patch(`/api/v1/track/${trackId}`)
+        .post('/api/v1/track')
         .auth(userOneToken, { type: 'bearer' })
-        .send(updateTrackDto)
+        .send(createTrackDto)
         .expect(HttpStatus.BAD_REQUEST)
         .then(({ body }) => {
           expect(body.message).toEqual([
-            'title must be shorter than or equal to 100 characters',
+            'title must be one of the following values: Happy, Sad, Angry, Excited, Anxious, Calm, Confused, Bored',
+            'date should not be empty',
+            'date must be a Date instance',
           ]);
         });
     });
