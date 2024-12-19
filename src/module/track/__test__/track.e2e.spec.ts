@@ -13,6 +13,7 @@ import { ICreateTrackDto } from '@/module/track/application/dto/create-track.dto
 import { IGetTrackStatsResponseDto } from '@/module/track/application/dto/get-track-stats-response.interface';
 import { GetTracksByDateRangeDto } from '@/module/track/application/dto/get-tracks-by-date-range.dto';
 import { UpdateTrackDto } from '@/module/track/application/dto/update-track.dto';
+import { Mood } from '@/module/track/application/enum/mood.enum';
 
 describe('Track Module', () => {
   let app: INestApplication;
@@ -133,7 +134,7 @@ describe('Track Module', () => {
         endDate: '2026-12-31T23:59:59.999Z',
       };
 
-      const secondtGetTracksByDateRangeDto: GetTracksByDateRangeDto = {
+      const secondGetTracksByDateRangeDto: GetTracksByDateRangeDto = {
         startDate: '2021-10-01T00:00:00.000Z',
         endDate: '2021-12-31T23:59:59.999Z',
       };
@@ -161,7 +162,7 @@ describe('Track Module', () => {
 
       await request(app.getHttpServer())
         .get(
-          `/api/v1/track/stats?startDate=${secondtGetTracksByDateRangeDto.startDate}&endDate=${secondtGetTracksByDateRangeDto.endDate}`,
+          `/api/v1/track/stats?startDate=${secondGetTracksByDateRangeDto.startDate}&endDate=${secondGetTracksByDateRangeDto.endDate}`,
         )
         .auth(userFourToken, { type: 'bearer' })
         .expect(HttpStatus.OK)
@@ -277,7 +278,7 @@ describe('Track Module', () => {
   describe('POST - /track', () => {
     it('should create a new track with valid data', async () => {
       const createTrackDto: ICreateTrackDto = {
-        title: 'New Track',
+        title: Mood.HAPPY,
         description: 'This is a new track',
         date: new Date('2024-11-15T12:34:56.789Z'),
       };
@@ -301,6 +302,25 @@ describe('Track Module', () => {
         });
     });
 
+    it('should return a validation error for title not valid enum', async () => {
+      const createTrackDto = {
+        title: 'Invalid Mood',
+        description: 'This is a new track',
+        date: new Date('2024-11-15T12:34:56.789Z'),
+      };
+
+      await request(app.getHttpServer())
+        .post('/api/v1/track')
+        .auth(userOneToken, { type: 'bearer' })
+        .send(createTrackDto)
+        .expect(HttpStatus.BAD_REQUEST)
+        .then(({ body }) => {
+          expect(body.message).toEqual([
+            'title must be one of the following values: Happy, Sad, Angry, Excited, Anxious, Calm, Confused, Bored',
+          ]);
+        });
+    });
+
     it('should return a validation error for missing title', async () => {
       const createTrackDto = {
         description: 'This is a new track',
@@ -314,7 +334,7 @@ describe('Track Module', () => {
         .expect(HttpStatus.BAD_REQUEST)
         .then(({ body }) => {
           expect(body.message).toEqual([
-            'title must be shorter than or equal to 100 characters',
+            'title must be one of the following values: Happy, Sad, Angry, Excited, Anxious, Calm, Confused, Bored',
             'title should not be empty',
             'title must be a string',
           ]);
@@ -323,7 +343,7 @@ describe('Track Module', () => {
 
     it('should return a validation error for missing date', async () => {
       const createTrackDto = {
-        title: 'New Track',
+        title: Mood.HAPPY,
         description: 'This is a new track',
       };
 
@@ -342,7 +362,7 @@ describe('Track Module', () => {
 
     it('should return a validation error for invalid date format', async () => {
       const createTrackDto = {
-        title: 'New Track',
+        title: Mood.HAPPY,
         description: 'This is a new track',
         date: 'invalidDate',
       };
@@ -357,28 +377,9 @@ describe('Track Module', () => {
         });
     });
 
-    it('should return a validation error for too long title', async () => {
-      const createTrackDto: ICreateTrackDto = {
-        title: 'a'.repeat(101),
-        description: 'This is a new track',
-        date: new Date('2024-11-15T12:34:56.789Z'),
-      };
-
-      await request(app.getHttpServer())
-        .post('/api/v1/track')
-        .auth(userOneToken, { type: 'bearer' })
-        .send(createTrackDto)
-        .expect(HttpStatus.BAD_REQUEST)
-        .then(({ body }) => {
-          expect(body.message).toEqual([
-            'title must be shorter than or equal to 100 characters',
-          ]);
-        });
-    });
-
     it('should return a validation error for too long description', async () => {
       const createTrackDto: ICreateTrackDto = {
-        title: 'New Track',
+        title: Mood.HAPPY,
         description: 'a'.repeat(201),
         date: new Date('2024-11-15T12:34:56.789Z'),
       };
@@ -399,7 +400,7 @@ describe('Track Module', () => {
       const existingTrackDate = new Date('2024-10-31T12:34:56.789Z');
 
       const createTrackDto: ICreateTrackDto = {
-        title: 'Conflicting Track',
+        title: Mood.HAPPY,
         description: 'This track has a conflicting date',
         date: existingTrackDate,
       };
@@ -420,7 +421,7 @@ describe('Track Module', () => {
   describe('PATCH - /track/:id', () => {
     it('should update a track with valid data', async () => {
       const updateTrackDto: UpdateTrackDto = {
-        title: 'Updated Track Title',
+        title: Mood.HAPPY,
         description: 'Updated description for the track',
       };
 
@@ -445,21 +446,21 @@ describe('Track Module', () => {
         });
     });
 
-    it('should return a validation error for invalid title', async () => {
-      const updateTrackDto = {
-        title: 'a'.repeat(101),
+    it('should return a validation error for title not valid enum', async () => {
+      const createTrackDto = {
+        title: 'Invalid Mood',
       };
 
-      const trackId = 1;
-
       await request(app.getHttpServer())
-        .patch(`/api/v1/track/${trackId}`)
+        .post('/api/v1/track')
         .auth(userOneToken, { type: 'bearer' })
-        .send(updateTrackDto)
+        .send(createTrackDto)
         .expect(HttpStatus.BAD_REQUEST)
         .then(({ body }) => {
           expect(body.message).toEqual([
-            'title must be shorter than or equal to 100 characters',
+            'title must be one of the following values: Happy, Sad, Angry, Excited, Anxious, Calm, Confused, Bored',
+            'date should not be empty',
+            'date must be a Date instance',
           ]);
         });
     });
@@ -485,7 +486,7 @@ describe('Track Module', () => {
 
     it('should not allow updating a track if the user is not the owner', async () => {
       const updateTrackDto: UpdateTrackDto = {
-        title: 'Unauthorized Update',
+        title: Mood.HAPPY,
       };
 
       const trackId = 2;
@@ -501,7 +502,7 @@ describe('Track Module', () => {
 
     it('should return a not found error for a non-existing track', async () => {
       const updateTrackDto: UpdateTrackDto = {
-        title: 'Some Title',
+        title: Mood.HAPPY,
       };
 
       const nonExistingTrackId = 9999;

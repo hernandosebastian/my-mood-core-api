@@ -1,5 +1,7 @@
+import { Mood } from '@/module/track/application/enum/mood.enum';
+
 export interface ICreateTrackDto {
-  title: string;
+  title: Mood;
   description?: string;
   date: Date;
 }

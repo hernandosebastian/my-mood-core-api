@@ -1,11 +1,15 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsEnum } from 'class-validator';
+
+import { Mood } from '@/module/track/application/enum/mood.enum';
 
 export class TrackResponseDto {
   @ApiProperty()
   id: number;
 
   @ApiProperty()
-  title: string;
+  @IsEnum(Mood)
+  title: Mood;
 
   @ApiPropertyOptional()
   description?: string;

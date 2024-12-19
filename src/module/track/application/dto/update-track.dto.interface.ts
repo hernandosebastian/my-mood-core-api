@@ -1,4 +1,6 @@
+import { Mood } from '@/module/track/application/enum/mood.enum';
+
 export interface IUpdateTrackDto {
-  title?: string;
+  title?: Mood;
   description?: string;
 }
