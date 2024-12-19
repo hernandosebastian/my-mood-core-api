@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "00f15dd1-91a5-4d02-abfa-253256115e3c",
+    "_postman_id": "794c26b8-a695-4c3b-9f9d-a19dd7057b3b",
     "name": "my-mood-core-api",
     "description": "**POSTMAN Collection for My Mood Core API**\n\nThis collection serves as the documentation and testing suite for the core API of _My Mood_. It includes all the necessary endpoints for interacting with the system.\n\n- **Authorization**: This collection uses Bearer Token authentication. Please ensure you replace the placeholder in the Authorization section with your valid token.\n    \n- **Environment Variables**: A `BASE_URL` variable has been included to streamline API testing. Make sure to update this variable to match the appropriate server environment (e.g., development, staging, or production).",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -235,9 +235,19 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{BASE_URL}}/track/stats",
+              "raw": "{{BASE_URL}}/track/stats?startDate=:startDate&endDate=:endDate",
               "host": ["{{BASE_URL}}"],
-              "path": ["track", "stats"]
+              "path": ["track", "stats"],
+              "query": [
+                {
+                  "key": "startDate",
+                  "value": ":startDate"
+                },
+                {
+                  "key": "endDate",
+                  "value": ":endDate"
+                }
+              ]
             }
           },
           "response": []
@@ -272,7 +282,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"title\": \"{{$randomJobTitle}}\",\r\n    \"description\": \"{{$randomJobDescriptor}}\",\r\n    \"date\": \"2024-10-29T00:00:00Z\"\r\n}\r\n",
+              "raw": "{\r\n    \"title\": \"Happy\",\r\n    \"description\": \"{{$randomJobDescriptor}}\",\r\n    \"date\": \"2024-10-29T00:00:00Z\"\r\n}\r\n",
               "options": {
                 "raw": {
                   "language": "json"
@@ -294,7 +304,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"title\": \"{{$randomJobTitle}}\",\r\n    \"description\": \"{{$randomJobDescriptor}}\"\r\n}\r\n",
+              "raw": "{\r\n    \"title\": \"Happy\",\r\n    \"description\": \"{{$randomJobDescriptor}}\"\r\n}\r\n",
               "options": {
                 "raw": {
                   "language": "json"
