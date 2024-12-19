@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsDate,
+  IsEnum,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -8,13 +9,15 @@ import {
 } from 'class-validator';
 
 import { ICreateTrackDto } from '@/module/track/application/dto/create-track.dto.interface';
+import { Mood } from '@/module/track/application/enum/mood.enum';
 
 export class CreateTrackDto implements Partial<ICreateTrackDto> {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
   @MaxLength(100)
-  title: string;
+  @IsEnum(Mood)
+  title: Mood;
 
   @ApiPropertyOptional()
   @IsString()
