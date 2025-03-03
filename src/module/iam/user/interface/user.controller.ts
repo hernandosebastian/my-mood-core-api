@@ -39,12 +39,12 @@ export class UserController {
   @Patch('me')
   @Policies(UpdateUserPolicyHandler)
   async updateOneOrFail(
-    @Body() updateTrackDto: UpdateUserDto,
+    @Body() updateUserDto: UpdateUserDto,
     @Request() req: ExpressRequest,
   ): Promise<UserResponseDto> {
     const currentUser = this.getCurrentUser(req);
 
-    return this.userService.updateOneOrFail(currentUser.id, updateTrackDto);
+    return this.userService.updateOneOrFail(currentUser.id, updateUserDto);
   }
 
   @Post('avatar')

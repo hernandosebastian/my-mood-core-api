@@ -61,7 +61,6 @@ describe('User Module', () => {
     it('should update a user with valid data', async () => {
       const updateUserDto: UpdateUserDto = {
         nickname: 'updated-nickname',
-        avatarSrc: 'updated-avatar-src',
       };
 
       await request(app.getHttpServer())
@@ -172,6 +171,13 @@ describe('User Module', () => {
             'File type not allowed. Accepted formats: PNG, JPG, JPEG',
           );
         });
+    });
+
+    it('should response an error if there is no file uploaded', async () => {
+      await request(app.getHttpServer())
+        .post('/api/v1/user/avatar')
+        .auth(adminToken, { type: 'bearer' })
+        .expect(HttpStatus.BAD_REQUEST);
     });
   });
 });
