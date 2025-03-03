@@ -71,10 +71,10 @@ export class S3Service implements IFileService {
     };
   }
 
-  async deleteFile(fileName: string): Promise<void> {
+  async deleteFile(fileName: string, folder: string): Promise<void> {
     const deleteParams = {
       Bucket: this.configService.get('s3.bucketName'),
-      Key: fileName,
+      Key: `${folder}${fileName}`,
     };
 
     await this.s3.deleteObject(deleteParams);

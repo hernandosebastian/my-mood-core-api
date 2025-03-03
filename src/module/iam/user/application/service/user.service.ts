@@ -60,7 +60,7 @@ export class UserService {
     const user = await this.userRepository.getOneByIdOrFail(userId);
 
     if (user.avatarSrc) {
-      await this.fileService.deleteFile(user.avatarSrc);
+      await this.fileService.deleteFile(user.avatarSrc, folder);
     }
     const newAvatarSrc = await this.fileService.saveFile(file, folder);
 
