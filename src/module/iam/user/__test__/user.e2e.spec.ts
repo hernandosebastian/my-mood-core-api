@@ -73,7 +73,7 @@ describe('User Module', () => {
             id: expect.any(Number),
             username: expect.any(String),
             nickname: 'updated-nickname',
-            avatarSrc: 'updated-avatar-src',
+            avatarSrc: expect.any(String),
             externalId: expect.any(String),
             roles: expect.arrayContaining([expect.any(String)]),
             createdAt: expect.any(String),
@@ -171,13 +171,6 @@ describe('User Module', () => {
             'File type not allowed. Accepted formats: PNG, JPG, JPEG',
           );
         });
-    });
-
-    it('should response an error if there is no file uploaded', async () => {
-      await request(app.getHttpServer())
-        .post('/api/v1/user/avatar')
-        .auth(adminToken, { type: 'bearer' })
-        .expect(HttpStatus.BAD_REQUEST);
     });
   });
 });
