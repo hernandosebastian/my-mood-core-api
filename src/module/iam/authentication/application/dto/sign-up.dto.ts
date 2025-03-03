@@ -19,10 +19,5 @@ export class SignUpDto implements ISignUpDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  avatarSrc: string;
-
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
   password: string;
 }
