@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Patch, Request } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Patch,
+  Post,
+  Request,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request as ExpressRequest } from 'express';
 
@@ -12,6 +21,7 @@ import { UpdateUserPolicyHandler } from '@iam/user/application/policy/update-use
 import { UserService } from '@iam/user/application/service/user.service';
 import { User } from '@iam/user/domain/user.entity';
 import { getCurrentUserFromRequest } from '@iam/user/domain/util/getCurrentUserFromRequest.util';
+import { AvatarFileInterceptor } from '@iam/user/infrastructure/interceptor/avatar-file.interceptor';
 
 @Controller('user')
 @ApiTags('user')
@@ -35,6 +45,18 @@ export class UserController {
     const currentUser = this.getCurrentUser(req);
 
     return this.userService.updateOneOrFail(currentUser.id, updateTrackDto);
+  }
+
+  @Post('avatar')
+  @Policies(UpdateUserPolicyHandler)
+  @UseInterceptors(AvatarFileInterceptor())
+  async uploadAvatar(
+    @UploadedFile() file: Express.Multer.File,
+    @Request() req: ExpressRequest,
+  ): Promise<UserResponseDto> {
+    const currentUser = this.getCurrentUser(req);
+
+    return this.userService.uploadAvatar(currentUser.id, file);
   }
 
   private getCurrentUser(request: ExpressRequest): User {

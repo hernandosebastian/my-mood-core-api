@@ -1,6 +1,8 @@
 import { Module, Provider } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { FileModule } from '@common/file/file.module';
+
 import { AuthorizationModule } from '@iam/authorization/authorization.module';
 import { UserService } from '@iam/user/application/service/user.service';
 import { UserModule } from '@iam/user/user.module';
@@ -34,6 +36,7 @@ const trackRepositoryProvider: Provider = {
     TypeOrmModule.forFeature([TrackSchema]),
     AuthorizationModule.forFeature({ permissions: trackPermissions }),
     UserModule,
+    FileModule,
   ],
   controllers: [TrackController],
   providers: [
