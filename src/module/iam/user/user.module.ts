@@ -1,6 +1,10 @@
 import { Module, Provider } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { FILE_SERVICE_KEY } from '@common/file/application/service/file.service.interface';
+import { FileModule } from '@common/file/file.module';
+import { S3Service } from '@common/file/infrastructure/s3/s3.service';
+
 import { ReadUserPolicyHandler } from '@iam/authentication/application/policy/read-user-policy.handler';
 import { AuthorizationModule } from '@iam/authorization/authorization.module';
 import { UserMapper } from '@iam/user/application/mapper/user.mapper';
@@ -18,10 +22,16 @@ const userRepositoryProvider: Provider = {
   useClass: UserMysqlRepository,
 };
 
+const fileServiceProvider: Provider = {
+  provide: FILE_SERVICE_KEY,
+  useClass: S3Service,
+};
+
 @Module({
   imports: [
     TypeOrmModule.forFeature([UserSchema]),
     AuthorizationModule.forFeature({ permissions: userPermissions }),
+    FileModule,
   ],
   controllers: [UserController],
   providers: [
@@ -29,6 +39,7 @@ const userRepositoryProvider: Provider = {
     userRepositoryProvider,
     UserMapper,
     ...policyHandlersProviders,
+    fileServiceProvider,
   ],
   exports: [UserService, userRepositoryProvider, UserMapper],
 })

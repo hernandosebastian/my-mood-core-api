@@ -20,3 +20,20 @@ services:
     volumes:
       - ./data/docker/volumes/cognito:/app/.cognito
 
+  localstack:
+    image: localstack/localstack
+    ports:
+      - '4566:4566'
+    environment:
+      - SERVICES=s3
+      - DEFAULT_REGION=${S3_REGION}
+      - S3_BUCKET_NAME=${S3_BUCKET_NAME}
+      - S3_REGION=${S3_REGION}
+    volumes:
+      - ./data/docker/volumes/localstack:/var/lib/localstack
+      - ./data/scripts/init-s3.sh:/etc/localstack/init/ready.d/init-s3.sh
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:4566/_localstack/health']
+      interval: 5s
+      timeout: 10s
+      retries: 5

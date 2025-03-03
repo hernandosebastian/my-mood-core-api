@@ -28,10 +28,6 @@ export class UserMapper {
       updates.nickname = updateUserDto.nickname;
     }
 
-    if (updateUserDto.avatarSrc) {
-      updates.avatarSrc = updateUserDto.avatarSrc;
-    }
-
     return updates;
   }
 }
