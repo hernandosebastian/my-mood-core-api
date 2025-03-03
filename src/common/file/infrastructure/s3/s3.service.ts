@@ -19,6 +19,10 @@ export class S3Service implements IFileService {
       region: this.configService.get('s3.region'),
       endpoint: this.configService.get('s3.localEndpoint'),
       forcePathStyle: true,
+      credentials: {
+        accessKeyId: this.configService.get('aws.accessKeyId'),
+        secretAccessKey: this.configService.get('aws.secretAccessKey'),
+      },
     };
 
     const prodConfig: S3ClientConfig = {
