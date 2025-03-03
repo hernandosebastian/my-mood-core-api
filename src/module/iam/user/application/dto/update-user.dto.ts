@@ -7,9 +7,4 @@ export class UpdateUserDto {
   @IsOptional()
   @MaxLength(35)
   nickname?: string;
-
-  @ApiPropertyOptional()
-  @IsString()
-  @IsOptional()
-  avatarSrc?: string;
 }

@@ -9,7 +9,7 @@ import { Track } from '@/module/track/domain/track.entity';
 export class User extends Base {
   username: string;
   nickname: string;
-  avatarSrc: string;
+  avatarSrc?: string;
   externalId?: string;
   roles: AppRole[];
   isVerified: boolean;
@@ -20,8 +20,8 @@ export class User extends Base {
   constructor(
     username: string,
     nickname: string,
-    avatarSrc: string,
     roles: AppRole[],
+    avatarSrc?: string,
     tracks?: Track[],
     options?: {
       externalId?: string;

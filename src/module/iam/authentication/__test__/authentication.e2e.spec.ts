@@ -121,7 +121,6 @@ describe('Authentication Module', () => {
         const signUpDto = {
           username: 'john.doe@test.com',
           nickname: 'john',
-          avatarSrc: 'avatarSrc',
           password: '$Test123',
         } as SignUpDto;
 
@@ -146,7 +145,6 @@ describe('Authentication Module', () => {
         const signUpDto = {
           username: 'jane.doe@test.com',
           nickname: 'jane',
-          avatarSrc: 'avatarSrc',
           password: '$Test123',
         } as SignUpDto;
 
@@ -177,7 +175,6 @@ describe('Authentication Module', () => {
         const signUpDto: SignUpDto = {
           username: 'repeat.jane.doe@test.com',
           nickname: 'x'.repeat(40),
-          avatarSrc: 'avatarSrc',
           password: '$Test123',
         };
 
@@ -201,7 +198,6 @@ describe('Authentication Module', () => {
         const signUpDto = {
           username: 'thomas.doe@test.com',
           nickname: 'thomas',
-          avatarSrc: 'avatarSrc',
           password: '$Test123',
         } as SignUpDto;
 
@@ -230,7 +226,6 @@ describe('Authentication Module', () => {
         const signUpDto: ISignUpDto = {
           username: 'username',
           nickname: 'username',
-          avatarSrc: 'avatarSrc',
           password: '123456',
         };
 
@@ -251,7 +246,6 @@ describe('Authentication Module', () => {
         const signUpDto: ISignUpDto = {
           username: 'some@account.com',
           nickname: 'some',
-          avatarSrc: 'avatarSrc',
           password: '123456',
         };
 
@@ -268,7 +262,6 @@ describe('Authentication Module', () => {
         const signUpDto = {
           username: 'jane.doe.admin@test.com',
           nickname: 'admin',
-          avatarSrc: 'avatarSrc',
           password: '$Test123',
         } as SignUpDto;
 
