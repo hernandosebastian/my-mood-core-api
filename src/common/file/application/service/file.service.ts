@@ -15,7 +15,7 @@ export class FileService {
     return this.fileService.saveFile(file, folder);
   }
 
-  async deleteFile(fileName: string): Promise<void> {
-    return this.fileService.deleteFile(fileName);
+  async deleteFile(fileName: string, folder: string): Promise<void> {
+    return this.fileService.deleteFile(fileName, folder);
   }
 }
