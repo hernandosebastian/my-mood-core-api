@@ -19,6 +19,7 @@ export const UserSchema = new EntitySchema<User>({
     },
     avatarSrc: {
       type: String,
+      nullable: true,
     },
     externalId: {
       type: String,
