@@ -380,7 +380,7 @@ describe('Track Module', () => {
     it('should return a validation error for too long description', async () => {
       const createTrackDto: ICreateTrackDto = {
         title: Mood.HAPPY,
-        description: 'a'.repeat(201),
+        description: 'a'.repeat(1001),
         date: new Date('2024-11-15T12:34:56.789Z'),
       };
 
@@ -467,7 +467,7 @@ describe('Track Module', () => {
 
     it('should return a validation error for invalid description', async () => {
       const updateTrackDto = {
-        description: 'a'.repeat(201),
+        description: 'a'.repeat(1001),
       };
 
       const trackId = 1;
