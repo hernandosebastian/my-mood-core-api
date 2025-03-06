@@ -391,7 +391,7 @@ describe('Track Module', () => {
         .expect(HttpStatus.BAD_REQUEST)
         .then(({ body }) => {
           expect(body.message).toEqual([
-            'description must be shorter than or equal to 200 characters',
+            'description must be shorter than or equal to 1000 characters',
           ]);
         });
     });
@@ -479,7 +479,7 @@ describe('Track Module', () => {
         .expect(HttpStatus.BAD_REQUEST)
         .then(({ body }) => {
           expect(body.message).toEqual([
-            'description must be shorter than or equal to 200 characters',
+            'description must be shorter than or equal to 1000 characters',
           ]);
         });
     });

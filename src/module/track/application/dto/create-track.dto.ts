@@ -21,7 +21,7 @@ export class CreateTrackDto implements Partial<ICreateTrackDto> {
   @ApiPropertyOptional()
   @IsString()
   @IsOptional()
-  @MaxLength(200)
+  @MaxLength(1000)
   description?: string;
 
   @ApiProperty()

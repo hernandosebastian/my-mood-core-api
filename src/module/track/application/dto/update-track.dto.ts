@@ -13,6 +13,6 @@ export class UpdateTrackDto {
   @ApiPropertyOptional()
   @IsString()
   @IsOptional()
-  @MaxLength(200)
+  @MaxLength(1000)
   description?: string;
 }
