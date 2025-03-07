@@ -111,7 +111,7 @@ describe('User Module', () => {
         .send(updateUserDto)
         .expect(HttpStatus.CONFLICT)
         .then(({ body }) => {
-          expect(body.message).toEqual('regular nickname is already taken');
+          expect(body.message).toEqual('regular ya está en uso');
         });
     });
   });
