@@ -1,2 +1,3 @@
-export const USER_ALREADY_CONFIRMED_ERROR = 'User is already confirmed';
-export const TOKEN_EXPIRED_ERROR = 'Access token expired';
+export const USER_ALREADY_CONFIRMED_ERROR = 'El usuario ya está confirmado';
+export const USER_ALREADY_SIGNED_UP_ERROR = 'El usuario ya está registrado';
+export const TOKEN_EXPIRED_ERROR = 'El token de acceso ha expirado';
