@@ -17,9 +17,11 @@ import { ISignUpDto } from '@iam/authentication/application/dto/sign-up.dto.inte
 import {
   TOKEN_EXPIRED_ERROR,
   USER_ALREADY_CONFIRMED_ERROR,
+  USER_ALREADY_SIGNED_UP_ERROR,
 } from '@iam/authentication/application/exception/authentication-exception-messages';
 import { TokenExpiredException } from '@iam/authentication/application/exception/token-expired.exception';
 import { UserAlreadyConfirmed } from '@iam/authentication/application/exception/user-already-confirmed.exception';
+import { UserAlreadySignedUp } from '@iam/authentication/application/exception/user-already-signed-up.exception';
 import { CodeMismatchException } from '@iam/authentication/infrastructure/cognito/exception/code-mismatch.exception';
 import {
   CODE_MISMATCH_ERROR,
@@ -218,7 +220,9 @@ describe('Authentication Module', () => {
           .send(signUpDto)
           .expect(HttpStatus.BAD_REQUEST)
           .then(({ body }) => {
-            expect(body.message).toBe('User already signed up');
+            expect(body.message).toBe(
+              new UserAlreadySignedUp(USER_ALREADY_SIGNED_UP_ERROR).message,
+            );
           });
       });
 

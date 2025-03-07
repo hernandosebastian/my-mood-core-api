@@ -9,7 +9,10 @@ import { IResendConfirmationCodeDto } from '@iam/authentication/application/dto/
 import { ISignInResponse } from '@iam/authentication/application/dto/sign-in-response.interface';
 import { ISignInDto } from '@iam/authentication/application/dto/sign-in.dto.interface';
 import { ISignUpDto } from '@iam/authentication/application/dto/sign-up.dto.interface';
-import { USER_ALREADY_CONFIRMED_ERROR } from '@iam/authentication/application/exception/authentication-exception-messages';
+import {
+  USER_ALREADY_CONFIRMED_ERROR,
+  USER_ALREADY_SIGNED_UP_ERROR,
+} from '@iam/authentication/application/exception/authentication-exception-messages';
 import { UserAlreadyConfirmed } from '@iam/authentication/application/exception/user-already-confirmed.exception';
 import { UserAlreadySignedUp } from '@iam/authentication/application/exception/user-already-signed-up.exception';
 import {
@@ -48,7 +51,7 @@ export class AuthenticationService {
       return this.signUpAndSave(username, nickname, password, existingUser.id);
     }
 
-    throw new UserAlreadySignedUp('User already signed up');
+    throw new UserAlreadySignedUp(USER_ALREADY_SIGNED_UP_ERROR);
   }
 
   private async signUpAndSave(

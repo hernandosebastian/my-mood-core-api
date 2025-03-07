@@ -1,11 +1,11 @@
-export const INVALID_PASSWORD_ERROR = 'Invalid username or password';
+export const INVALID_PASSWORD_ERROR = 'Usuario o contraseña inválidos';
 export const PASSWORD_VALIDATION_ERROR =
-  'Password must have at least 8 characters, one uppercase, one lowercase, one number and one symbol';
+  'La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un símbolo';
 export const USER_NOT_CONFIRMED_ERROR =
-  'User account not confirmed. Please confirm your account then try again';
-export const UNEXPECTED_ERROR_CODE_ERROR = 'Unexpected error code';
+  'La cuenta de usuario no está confirmada. Por favor, confírmala y vuelve a intentarlo';
+export const UNEXPECTED_ERROR_CODE_ERROR = 'Código de error inesperado';
 export const NEW_PASSWORD_REQUIRED_ERROR =
-  'User must provide new password in order to complete authentication';
-export const CODE_MISMATCH_ERROR = 'Incorrect confirmation code';
+  'El usuario debe proporcionar una nueva contraseña para completar la autenticación';
+export const CODE_MISMATCH_ERROR = 'Código de confirmación incorrecto';
 export const EXPIRED_CODE_ERROR =
-  'Confirmation code already expired. Request a new one and try again';
+  'El código de confirmación ha expirado. Solicita uno nuevo e inténtalo nuevamente';
