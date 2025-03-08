@@ -15,6 +15,7 @@ export const TrackSchema = new EntitySchema<Track>({
     description: {
       type: String,
       nullable: true,
+      length: 1000,
     },
     date: {
       type: Date,
