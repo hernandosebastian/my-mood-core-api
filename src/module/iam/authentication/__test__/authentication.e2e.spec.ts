@@ -285,6 +285,7 @@ describe('Authentication Module', () => {
         const serviceResponse: ISignInResponse = {
           accessToken: 'accessToken',
           refreshToken: 'refreshToken',
+          expiresIn: 3600,
         };
         identityProviderServiceMock.signIn.mockResolvedValueOnce(
           serviceResponse,

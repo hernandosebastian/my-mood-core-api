@@ -90,6 +90,7 @@ export class CognitoService implements IIdentityProviderService {
           return resolve({
             accessToken: result.getAccessToken().getJwtToken(),
             refreshToken: result.getRefreshToken().getToken(),
+            expiresIn: result.getAccessToken().getExpiration(),
           });
         },
         onFailure: (err: ICognitoRequestError) => {
