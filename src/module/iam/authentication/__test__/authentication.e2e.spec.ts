@@ -284,6 +284,7 @@ describe('Authentication Module', () => {
       it('Should allow users to sign in when provided a correct username and password', async () => {
         const serviceResponse: ISignInResponse = {
           accessToken: 'accessToken',
+          refreshToken: 'refreshToken',
         };
         identityProviderServiceMock.signIn.mockResolvedValueOnce(
           serviceResponse,

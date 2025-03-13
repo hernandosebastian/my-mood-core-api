@@ -89,6 +89,7 @@ export class CognitoService implements IIdentityProviderService {
         onSuccess: (result) => {
           return resolve({
             accessToken: result.getAccessToken().getJwtToken(),
+            refreshToken: result.getRefreshToken().getToken(),
           });
         },
         onFailure: (err: ICognitoRequestError) => {
