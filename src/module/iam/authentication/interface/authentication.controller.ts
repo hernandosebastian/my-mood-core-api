@@ -6,6 +6,8 @@ import { ISuccessfulOperationResponse } from '@common/base/application/interface
 import { ConfirmPasswordDto } from '@iam/authentication/application/dto/confirm-password.dto';
 import { ConfirmUserDto } from '@iam/authentication/application/dto/confirm-user.dto';
 import { ForgotPasswordDto } from '@iam/authentication/application/dto/forgot-password.dto';
+import { IRefreshSessionResponse } from '@iam/authentication/application/dto/refresh-session-response.interface';
+import { RefreshSessionDto } from '@iam/authentication/application/dto/refresh-session.dto';
 import { ResendConfirmationCodeDto } from '@iam/authentication/application/dto/resend-confirmation-code.dto';
 import { ISignInResponse } from '@iam/authentication/application/dto/sign-in-response.interface';
 import { SignInDto } from '@iam/authentication/application/dto/sign-in.dto';
@@ -64,5 +66,13 @@ export class AuthenticationController {
     return this.authenticationService.handleResendConfirmationCode(
       resendConfirmationCode,
     );
+  }
+
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  async handleRefreshSession(
+    @Body() refreshSessionDto: RefreshSessionDto,
+  ): Promise<IRefreshSessionResponse> {
+    return this.authenticationService.handleRefreshSession(refreshSessionDto);
   }
 }
