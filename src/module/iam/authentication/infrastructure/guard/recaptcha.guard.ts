@@ -5,6 +5,8 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { firstValueFrom } from 'rxjs';
 
+import { ENVIRONMENT } from '@config/environment.enum';
+
 import { ISignUpDto } from '@iam/authentication/application/dto/sign-up.dto.interface';
 
 interface RecaptchaResponse {
@@ -18,6 +20,7 @@ interface RecaptchaResponse {
 export class RecaptchaGuard implements CanActivate {
   private readonly recaptchaSecret: string;
   private readonly recaptchaVerifyUrl: string;
+  private readonly isTestingEnvironment: boolean;
 
   constructor(
     private readonly httpService: HttpService,
@@ -29,8 +32,11 @@ export class RecaptchaGuard implements CanActivate {
     this.recaptchaVerifyUrl =
       this.configService.get<string>('recaptcha.verifyUrl') ??
       'https://www.google.com/recaptcha/api/siteverify';
+    this.isTestingEnvironment =
+      this.configService.get<string>('NODE_ENV') ===
+      ENVIRONMENT.AUTOMATED_TESTS;
 
-    if (!this.recaptchaSecret) {
+    if (!this.recaptchaSecret && !this.isTestingEnvironment) {
       throw new BadRequestException('RECAPTCHA_SECRET_KEY no está configurada');
     }
   }
@@ -42,6 +48,10 @@ export class RecaptchaGuard implements CanActivate {
 
     if (!recaptchaToken) {
       throw new BadRequestException('Falta el token de CAPTCHA.');
+    }
+
+    if (this.isTestingEnvironment) {
+      return true;
     }
 
     const params = new URLSearchParams();
