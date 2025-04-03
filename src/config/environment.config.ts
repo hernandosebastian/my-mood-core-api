@@ -20,4 +20,8 @@ export const environmentConfig = () => ({
   frontend: {
     url: process.env.FRONTEND_URL,
   },
+  recaptcha: {
+    secretKey: process.env.RECAPTCHA_SECRET_KEY,
+    verifyUrl: process.env.RECAPTCHA_VERIFY_URL,
+  },
 });

@@ -20,4 +20,9 @@ export class SignUpDto implements ISignUpDto {
   @IsString()
   @IsNotEmpty()
   password: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  recaptchaToken: string;
 }

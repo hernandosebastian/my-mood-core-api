@@ -128,6 +128,7 @@ describe('Authentication Module', () => {
           username: 'john.doe@test.com',
           nickname: 'john',
           password: '$Test123',
+          recaptchaToken: 'recaptchaToken',
         } as SignUpDto;
 
         await request(app.getHttpServer())
@@ -152,6 +153,7 @@ describe('Authentication Module', () => {
           username: 'jane.doe@test.com',
           nickname: 'jane',
           password: '$Test123',
+          recaptchaToken: 'recaptchaToken',
         } as SignUpDto;
 
         await request(app.getHttpServer())
@@ -182,6 +184,7 @@ describe('Authentication Module', () => {
           username: 'repeat.jane.doe@test.com',
           nickname: 'x'.repeat(40),
           password: '$Test123',
+          recaptchaToken: 'recaptchaToken',
         };
 
         await request(app.getHttpServer())
@@ -205,6 +208,7 @@ describe('Authentication Module', () => {
           username: 'thomas.doe@test.com',
           nickname: 'thomas',
           password: '$Test123',
+          recaptchaToken: 'recaptchaToken',
         } as SignUpDto;
 
         await request(app.getHttpServer())
@@ -235,6 +239,7 @@ describe('Authentication Module', () => {
           username: 'username',
           nickname: 'username',
           password: '123456',
+          recaptchaToken: 'recaptchaToken',
         };
 
         await request(app.getHttpServer())
@@ -255,6 +260,7 @@ describe('Authentication Module', () => {
           username: 'some@account.com',
           nickname: 'some',
           password: '123456',
+          recaptchaToken: 'recaptchaToken',
         };
 
         await request(app.getHttpServer())
@@ -271,6 +277,7 @@ describe('Authentication Module', () => {
           username: 'jane.doe.admin@test.com',
           nickname: 'admin',
           password: '$Test123',
+          recaptchaToken: 'recaptchaToken',
         } as SignUpDto;
 
         const error = new NicknameTakenException(signUpDto.nickname);

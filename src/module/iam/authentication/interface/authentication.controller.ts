@@ -1,4 +1,11 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { ISuccessfulOperationResponse } from '@common/base/application/interface/successful-operation-response.interface';
@@ -15,6 +22,7 @@ import { SignUpDto } from '@iam/authentication/application/dto/sign-up.dto';
 import { AuthenticationService } from '@iam/authentication/application/service/authentication.service';
 import { AuthType } from '@iam/authentication/domain/auth-type.enum';
 import { Auth } from '@iam/authentication/infrastructure/decorator/auth.decorator';
+import { RecaptchaGuard } from '@iam/authentication/infrastructure/guard/recaptcha.guard';
 import { UserResponseDto } from '@iam/user/application/dto/user-response.dto';
 
 @Controller('auth')
@@ -24,6 +32,7 @@ export class AuthenticationController {
   constructor(private readonly authenticationService: AuthenticationService) {}
 
   @Post('sign-up')
+  @UseGuards(RecaptchaGuard)
   async handleSignUp(@Body() signUpDto: SignUpDto): Promise<UserResponseDto> {
     return this.authenticationService.handleSignUp(signUpDto);
   }

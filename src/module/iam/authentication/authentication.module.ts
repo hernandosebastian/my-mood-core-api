@@ -1,3 +1,4 @@
+import { HttpModule } from '@nestjs/axios';
 import { Module, Provider } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { PassportModule } from '@nestjs/passport';
@@ -17,7 +18,7 @@ const authenticationRepositoryProvider: Provider = {
 };
 
 @Module({
-  imports: [PassportModule, UserModule],
+  imports: [PassportModule, HttpModule, UserModule],
   controllers: [AuthenticationController],
   providers: [
     JwtStrategy,
