@@ -8,12 +8,26 @@ import { firstValueFrom } from 'rxjs';
 import { ENVIRONMENT } from '@config/environment.enum';
 
 import { ISignUpDto } from '@iam/authentication/application/dto/sign-up.dto.interface';
+import { BadRequestResponseException } from '@iam/authentication/infrastructure/exceptions/bar-request-response.exception';
+import { InvalidInputResponseException } from '@iam/authentication/infrastructure/exceptions/invalid-input-response.exception';
+import { InvalidInputSecretException } from '@iam/authentication/infrastructure/exceptions/invalid-input-secret.exception';
+import { MissingInputResponseException } from '@iam/authentication/infrastructure/exceptions/missing-input-response.exception';
+import { MissingInputSecretException } from '@iam/authentication/infrastructure/exceptions/missing-input-secret.exception';
+import { TimeoutOrDuplicateException } from '@iam/authentication/infrastructure/exceptions/timeout-or-duplicate.exception';
+
+type RecaptchaErrorCode =
+  | 'missing-input-secret'
+  | 'invalid-input-secret'
+  | 'missing-input-response'
+  | 'invalid-input-response'
+  | 'bad-request'
+  | 'timeout-or-duplicate';
 
 interface RecaptchaResponse {
   success: boolean;
   challenge_ts?: string;
   hostname?: string;
-  'error-codes'?: string[];
+  'error-codes'?: RecaptchaErrorCode[];
 }
 
 @Injectable()
@@ -37,7 +51,28 @@ export class RecaptchaGuard implements CanActivate {
       ENVIRONMENT.AUTOMATED_TESTS;
 
     if (!this.recaptchaSecret && !this.isTestingEnvironment) {
-      throw new BadRequestException('RECAPTCHA_SECRET_KEY no está configurada');
+      throw new MissingInputSecretException();
+    }
+  }
+
+  private handleRecaptchaError(errorCode: RecaptchaErrorCode): never {
+    switch (errorCode) {
+      case 'missing-input-secret':
+        throw new MissingInputSecretException();
+      case 'invalid-input-secret':
+        throw new InvalidInputSecretException();
+      case 'missing-input-response':
+        throw new MissingInputResponseException();
+      case 'invalid-input-response':
+        throw new InvalidInputResponseException();
+      case 'timeout-or-duplicate':
+        throw new TimeoutOrDuplicateException();
+      case 'bad-request':
+        throw new BadRequestResponseException();
+      default:
+        throw new BadRequestException(
+          'Error desconocido en la validación de reCAPTCHA',
+        );
     }
   }
 
@@ -47,7 +82,7 @@ export class RecaptchaGuard implements CanActivate {
     const userIp = request.ip;
 
     if (!recaptchaToken) {
-      throw new BadRequestException('Falta el token de CAPTCHA.');
+      throw new MissingInputResponseException();
     }
 
     if (this.isTestingEnvironment) {
@@ -70,12 +105,11 @@ export class RecaptchaGuard implements CanActivate {
       const data = response.data;
 
       if (!data.success) {
-        const errorCodes = data['error-codes']?.join(', ');
-        throw new BadRequestException(
-          errorCodes
-            ? `CAPTCHA inválido: ${errorCodes}`
-            : 'CAPTCHA inválido. Intenta de nuevo.',
-        );
+        const errorCode = data['error-codes']?.[0];
+        if (errorCode) {
+          this.handleRecaptchaError(errorCode);
+        }
+        throw new BadRequestResponseException();
       }
 
       return true;
@@ -83,9 +117,7 @@ export class RecaptchaGuard implements CanActivate {
       if (error instanceof BadRequestException) {
         throw error;
       }
-      throw new BadRequestException('Error al verificar el CAPTCHA.', {
-        cause: error,
-      });
+      throw new BadRequestResponseException();
     }
   }
 }
