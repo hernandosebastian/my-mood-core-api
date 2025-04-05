@@ -1,3 +1,6 @@
+const ONE_MINUTE = 60_000;
+const DEFAULT_THROTTLE_LIMIT = 20;
+
 export const environmentConfig = () => ({
   server: {
     port: Number(process.env.PORT),
@@ -23,5 +26,9 @@ export const environmentConfig = () => ({
   recaptcha: {
     secretKey: process.env.RECAPTCHA_SECRET_KEY,
     verifyUrl: process.env.RECAPTCHA_VERIFY_URL,
+  },
+  rateLimiting: {
+    ttl: Number(process.env.DEFAULT_THROTTLE_TTL) || ONE_MINUTE,
+    limit: Number(process.env.DEFAULT_THROTTLE_LIMIT) || DEFAULT_THROTTLE_LIMIT,
   },
 });
