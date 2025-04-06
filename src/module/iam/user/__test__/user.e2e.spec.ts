@@ -168,7 +168,7 @@ describe('User Module', () => {
         .expect(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
         .then(({ body }) => {
           expect(body.message).toMatch(
-            'File type not allowed. Accepted formats: PNG, JPG, JPEG',
+            'File type not allowed. Accepted formats: PNG, JPG, JPEG and WEBP',
           );
         });
     });
