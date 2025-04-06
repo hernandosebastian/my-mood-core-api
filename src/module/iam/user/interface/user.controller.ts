@@ -32,7 +32,7 @@ export class UserController {
     private readonly userMapper: UserMapper,
   ) {}
   @Get('me')
-  @Throttle({ default: { limit: 20, ttl: 60_000 } })
+  @Throttle({ default: { limit: 40, ttl: 60_000 } })
   @Policies(ReadUserPolicyHandler)
   async getMe(@CurrentUser() user: User): Promise<UserResponseDto> {
     return this.userMapper.fromUserToUserResponseDto(user);
