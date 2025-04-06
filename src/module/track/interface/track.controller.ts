@@ -11,6 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 import { Request as ExpressRequest } from 'express';
 
 import { Policies } from '@iam/authorization/infrastructure/policy/decorator/policy.decorator';
@@ -37,6 +38,7 @@ export class TrackController {
 
   @Get('/stats')
   @Policies(ReadTrackPolicyHandler)
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
   async getTrackStats(
     @Query() getTracksByDateRangeDto: GetTracksByDateRangeDto,
     @Request() req: ExpressRequest,
@@ -49,6 +51,7 @@ export class TrackController {
   }
 
   @Get('/by-date-range')
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
   @Policies(ReadTrackPolicyHandler)
   async getTracksByDateRange(
     @Query() getTracksByDateRangeDto: GetTracksByDateRangeDto,
@@ -64,6 +67,7 @@ export class TrackController {
 
   @Post()
   @Policies(CreateTrackPolicyHandler)
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
   async saveOne(
     @Body() createTrackDto: CreateTrackDto,
     @Request() req: ExpressRequest,
@@ -74,6 +78,7 @@ export class TrackController {
 
   @Patch(':id')
   @Policies(UpdateTrackPolicyHandler)
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
   async updateOneOrFail(
     @Param('id') id: number,
     @Body() updateTrackDto: UpdateTrackDto,
@@ -90,6 +95,7 @@ export class TrackController {
 
   @Delete(':id')
   @Policies(DeleteTrackPolicyHandler)
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
   async deleteOneOrFail(@Param('id') id: number): Promise<void> {
     return this.trackService.deleteOneOrFail(id);
   }

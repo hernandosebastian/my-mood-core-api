@@ -7,6 +7,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 
 import { ISuccessfulOperationResponse } from '@common/base/application/interface/successful-operation-response.interface';
 
@@ -33,18 +34,21 @@ export class AuthenticationController {
 
   @Post('sign-up')
   @UseGuards(RecaptchaGuard)
+  @Throttle({ default: { limit: 2, ttl: 60_000 } })
   async handleSignUp(@Body() signUpDto: SignUpDto): Promise<UserResponseDto> {
     return this.authenticationService.handleSignUp(signUpDto);
   }
 
   @Post('sign-in')
   @HttpCode(HttpStatus.OK)
+  @Throttle({ default: { limit: 5, ttl: 60_000 } })
   async handleSignIn(@Body() signInDto: SignInDto): Promise<ISignInResponse> {
     return this.authenticationService.handleSignIn(signInDto);
   }
 
   @Post('confirm-user')
   @HttpCode(HttpStatus.OK)
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
   async handleConfirmUser(
     @Body() confirmUserDto: ConfirmUserDto,
   ): Promise<ISuccessfulOperationResponse> {
@@ -53,6 +57,7 @@ export class AuthenticationController {
 
   @Post('forgot-password')
   @HttpCode(HttpStatus.OK)
+  @Throttle({ default: { limit: 2, ttl: 60_000 } })
   async handleForgotPassword(
     @Body() forgotPasswordDto: ForgotPasswordDto,
   ): Promise<ISuccessfulOperationResponse> {
@@ -61,6 +66,7 @@ export class AuthenticationController {
 
   @Post('confirm-password')
   @HttpCode(HttpStatus.OK)
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
   async handleConfirmPassword(
     @Body() confirmPasswordDto: ConfirmPasswordDto,
   ): Promise<ISuccessfulOperationResponse> {
@@ -69,6 +75,7 @@ export class AuthenticationController {
 
   @Post('resend-confirmation-code')
   @HttpCode(HttpStatus.OK)
+  @Throttle({ default: { limit: 2, ttl: 60_000 } })
   async handleResendConfirmationCode(
     @Body() resendConfirmationCode: ResendConfirmationCodeDto,
   ): Promise<ISuccessfulOperationResponse> {
@@ -79,6 +86,7 @@ export class AuthenticationController {
 
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
   async handleRefreshSession(
     @Body() refreshSessionDto: RefreshSessionDto,
   ): Promise<IRefreshSessionResponse> {

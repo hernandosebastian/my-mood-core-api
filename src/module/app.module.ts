@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { addTransactionalDataSource } from 'typeorm-transactional';
@@ -25,6 +26,20 @@ import { TrackModule } from '@/module/track/track.module';
       }),
       dataSourceFactory: async (options) => {
         return addTransactionalDataSource(new DataSource(options));
+      },
+    }),
+    ThrottlerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const ttl = configService.get<number>('rateLimiting.ttl');
+        const limit = configService.get<number>('rateLimiting.limit');
+        return [
+          {
+            ttl,
+            limit,
+          },
+        ];
       },
     }),
     IamModule,

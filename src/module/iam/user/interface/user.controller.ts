@@ -9,6 +9,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 import { Request as ExpressRequest } from 'express';
 
 import { ReadUserPolicyHandler } from '@iam/authentication/application/policy/read-user-policy.handler';
@@ -31,6 +32,7 @@ export class UserController {
     private readonly userMapper: UserMapper,
   ) {}
   @Get('me')
+  @Throttle({ default: { limit: 20, ttl: 60_000 } })
   @Policies(ReadUserPolicyHandler)
   async getMe(@CurrentUser() user: User): Promise<UserResponseDto> {
     return this.userMapper.fromUserToUserResponseDto(user);
@@ -38,6 +40,7 @@ export class UserController {
 
   @Patch('me')
   @Policies(UpdateUserPolicyHandler)
+  @Throttle({ default: { limit: 5, ttl: 60_000 } })
   async updateOneOrFail(
     @Body() updateUserDto: UpdateUserDto,
     @Request() req: ExpressRequest,
@@ -49,6 +52,7 @@ export class UserController {
 
   @Post('avatar')
   @Policies(UpdateUserPolicyHandler)
+  @Throttle({ default: { limit: 5, ttl: 60_000 } })
   @UseInterceptors(AvatarFileInterceptor())
   async uploadAvatar(
     @UploadedFile() file: Express.Multer.File,
