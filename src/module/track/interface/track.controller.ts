@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Throttle } from '@nestjs/throttler';
+import { SkipThrottle, Throttle } from '@nestjs/throttler';
 import { Request as ExpressRequest } from 'express';
 
 import { Policies } from '@iam/authorization/infrastructure/policy/decorator/policy.decorator';
@@ -38,7 +38,7 @@ export class TrackController {
 
   @Get('/stats')
   @Policies(ReadTrackPolicyHandler)
-  @Throttle({ default: { limit: 10, ttl: 60_000 } })
+  @SkipThrottle({ default: true })
   async getTrackStats(
     @Query() getTracksByDateRangeDto: GetTracksByDateRangeDto,
     @Request() req: ExpressRequest,
@@ -51,7 +51,7 @@ export class TrackController {
   }
 
   @Get('/by-date-range')
-  @Throttle({ default: { limit: 10, ttl: 60_000 } })
+  @SkipThrottle({ default: true })
   @Policies(ReadTrackPolicyHandler)
   async getTracksByDateRange(
     @Query() getTracksByDateRangeDto: GetTracksByDateRangeDto,
