@@ -1,18 +1,40 @@
-import { Module } from '@nestjs/common';
+import { Module, Provider } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { addTransactionalDataSource } from 'typeorm-transactional';
 
+import { ThrottlerExceptionFilter } from '@common/filter/throttler-exception.filter';
+
 import { environmentConfig } from '@config/environment.config';
+import { ENVIRONMENT } from '@config/environment.enum';
 import { datasourceOptions } from '@config/orm.config';
 
 import { IamModule } from '@iam/iam.module';
 
 import { HealthController } from '@/module/health/interface/health.controller';
 import { TrackModule } from '@/module/track/track.module';
+
+const providers: Provider[] = [
+  {
+    provide: APP_FILTER,
+    useClass: ThrottlerExceptionFilter,
+  },
+];
+
+const currentEnv = process.env.NODE_ENV;
+
+if (
+  currentEnv === ENVIRONMENT.PRODUCTION ||
+  currentEnv === ENVIRONMENT.STAGING
+) {
+  providers.push({
+    provide: APP_GUARD,
+    useClass: ThrottlerGuard,
+  });
+}
 
 @Module({
   imports: [
@@ -47,11 +69,6 @@ import { TrackModule } from '@/module/track/track.module';
     TrackModule,
   ],
   controllers: [HealthController],
-  providers: [
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
-  ],
+  providers: [...providers],
 })
 export class AppModule {}
