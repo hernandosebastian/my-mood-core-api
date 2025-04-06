@@ -22,9 +22,10 @@ export function AvatarFileInterceptor(): Type<NestInterceptor> {
       'image/png',
       'image/jpg',
       'image/jpeg',
+      'image/webp',
     ];
     private readonly MIME_TYPE_ERROR_MESSAGE =
-      'File type not allowed. Accepted formats: PNG, JPG, JPEG';
+      'File type not allowed. Accepted formats: PNG, JPG, JPEG and WEBP';
 
     async intercept(
       context: ExecutionContext,
