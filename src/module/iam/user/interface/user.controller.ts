@@ -9,7 +9,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Throttle } from '@nestjs/throttler';
+import { SkipThrottle, Throttle } from '@nestjs/throttler';
 import { Request as ExpressRequest } from 'express';
 
 import { ReadUserPolicyHandler } from '@iam/authentication/application/policy/read-user-policy.handler';
@@ -32,7 +32,7 @@ export class UserController {
     private readonly userMapper: UserMapper,
   ) {}
   @Get('me')
-  @Throttle({ default: { limit: 40, ttl: 60_000 } })
+  @SkipThrottle({ default: true })
   @Policies(ReadUserPolicyHandler)
   async getMe(@CurrentUser() user: User): Promise<UserResponseDto> {
     return this.userMapper.fromUserToUserResponseDto(user);
