@@ -1,0 +1,42 @@
+@startuml
+
+skinparam participant {
+    FontColor black
+    BorderColor black
+}
+
+skinparam participant {
+    BackgroundColor<<AWS-Cognito>> #4D27A8
+    BorderColor<<AWS-Cognito>> #341D78
+    FontColor<<AWS-Cognito>> white
+}
+
+actor User
+
+participant "Frontend (UI)" as UI
+participant "Backend API" as API
+database "Database" as DB
+participant "User Authentication" as Cognito <<AWS-Cognito>>
+
+User -> UI : Fill confirm user form
+UI -> API : Send confirm user request
+
+API -> DB : Fetch user by username
+DB --> API : Response with user found
+
+alt User is already verified
+    API --> UI : Send error that user is already verified
+    UI -> User : Show error toast
+else User is not verified
+    API -> Cognito : Confirm user in Cognito
+    Cognito --> API : Respond with successful confirmation message
+
+    API -> DB : Update user as verified
+    DB --> API : Response with updated user
+
+    API --> UI : Send successful confirmation message
+    UI -> User : Show successful confirmation toast
+    UI -> User : Redirect user to sign in page
+end
+
+@enduml

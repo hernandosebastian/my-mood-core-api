@@ -1,0 +1,42 @@
+@startuml
+
+skinparam participant {
+    FontColor black
+    BorderColor black
+}
+
+skinparam participant {
+    BackgroundColor<<AWS-Cognito>> #4D27A8
+    BorderColor<<AWS-Cognito>> #341D78
+    FontColor<<AWS-Cognito>> white
+}
+
+actor User
+
+participant "Frontend (UI)" as UI
+participant "Backend API" as API
+database "Database" as DB
+participant "User Authentication" as Cognito <<AWS-Cognito>>
+
+User -> UI : Perform action that requires authentication
+UI -> API : Send request to backend
+API --> UI : Response token expired or invalid
+UI -> API : Send refresh token from cookies
+
+API -> DB : Get user by token
+DB --> API : Response user
+
+API -> Cognito : Refresh session with refresh token
+Cognito --> API : Response new tokens
+
+API --> UI : Response new tokens
+UI -> UI : Save new tokens in cookies
+
+UI -> API : Retry the original failed request with new access token
+
+note right of API
+Backend processes the requested action normally
+depending on the request type
+end note
+
+@enduml

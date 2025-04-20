@@ -1,0 +1,77 @@
+@startuml
+
+skinparam participant {
+    FontColor black
+    BorderColor black
+}
+
+skinparam participant {
+    BackgroundColor<<AWS-SES>> #DD344C
+    BorderColor<<AWS-SES>> #A61C35
+    FontColor<<AWS-SES>> black
+}
+
+skinparam participant {
+    BackgroundColor<<AWS-Cognito>> #4D27A8
+    BorderColor<<AWS-Cognito>> #341D78
+    FontColor<<AWS-Cognito>> white
+}
+
+skinparam participant {
+    BackgroundColor<<Google-ReCaptcha>> #4285F4
+    BorderColor<<Google-ReCaptcha>> #3367D6
+    FontColor<<Google-ReCaptcha>> white
+}
+
+actor User
+
+participant "Frontend (UI)" as UI
+participant "Backend API" as API
+database "Database" as DB
+
+participant "Send Emails" as SES <<AWS-SES>>
+participant "User Authentication" as Cognito <<AWS-Cognito>>
+participant "Bot Protection" as Recaptcha <<Google-ReCaptcha>>
+
+User -> UI : Fill sign up form
+UI -> User : Ask user to complete captcha
+User -> Recaptcha : Complete captcha challenge
+Recaptcha -> User : Provide captcha token
+User -> UI : Submit form with captcha token
+UI -> API : Send sign up request with captcha token
+
+API -> Recaptcha : Validate captcha token
+Recaptcha --> API : Response captcha is valid
+
+API -> DB : Check if user exists
+DB --> API : Response with user existence
+
+alt User does not exist
+    API -> DB : Create user in database
+    DB --> API : Response user is created
+
+    API -> Cognito : Create user in Cognito
+    Cognito -> SES : Send confirmation code email
+    SES -> User : Send email with confirmation code
+    Cognito --> API : Response with Cognito external ID
+
+    API -> DB : Update user with external ID
+    DB --> API : Response user is updated
+else User exists
+    alt User does not have external ID
+        API -> Cognito : Create user in Cognito
+        Cognito -> SES : Send confirmation code email
+        SES -> User : Send email with confirmation code
+        Cognito --> API : Response with Cognito external ID
+
+        API -> DB : Update user with external ID
+        DB --> API : Response user is updated
+    else User already has external ID
+        API --> API : Throw error user already signed up
+    end
+end
+
+API --> UI : Response user information
+UI -> User : Redirect user to confirmation screen with email
+
+@enduml
