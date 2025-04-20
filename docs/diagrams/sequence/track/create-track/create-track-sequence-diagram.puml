@@ -1,0 +1,27 @@
+@startuml
+
+skinparam participant {
+    FontColor black
+    BorderColor black
+}
+
+actor User
+
+participant "Frontend (UI)" as UI
+participant "Backend API" as API
+participant "Database" as DB
+
+User -> UI : Open day without a tracked mood
+UI -> User : Show view to complete the form
+
+User -> UI : Fill out the form and submit
+UI -> API : Send create request
+API -> DB : Send request with new data
+DB --> API : Respond with created track
+API --> UI : Respond with created track
+
+UI -> UI : Add new track to cache
+UI -> User : Show success toast
+UI -> User : Show created track information
+
+@enduml

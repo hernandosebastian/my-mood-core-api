@@ -1,0 +1,54 @@
+@startuml
+
+skinparam participant {
+    FontColor black
+    BorderColor black
+}
+
+skinparam participant {
+    BackgroundColor<<Cloudflare>> #F5A623
+    BorderColor<<Cloudflare>> #D9801B
+    FontColor<<Cloudflare>> black
+}
+
+actor User
+
+participant "Cloudflare" as CF <<Cloudflare>>
+participant "Frontend (UI)" as UI
+participant "Backend API" as API
+
+User -> CF : Request to access frontend
+CF -> CF : Validate if request is suspicious
+alt Request is too suspicious
+    CF -> User : Block access to the page
+else Request is suspicious
+    CF -> User : Show CAPTCHA
+    User -> CF : Complete CAPTCHA
+    CF -> UI : Allow user to proceed
+else Request is not suspicious
+    CF -> UI : Allow user to proceed
+end
+
+UI -> API : Send request to backend
+API -> API : Check rate limits
+alt Rate limit exceeded
+    API -> UI : Respond rate limit error
+else Rate limit not exceeded
+    alt If route requires authentication
+        API -> API : Validate token (check if token corresponds to the user and action)
+        alt Token is invalid or mismatched
+            API -> UI : Respond with invalid or mismatched token error
+        else Token is valid
+            API -> UI : Continue with requested action
+        end
+    else
+        API -> UI : Continue with requested action
+    end
+end
+
+note right of CF
+  This diagram reflects the guards and validations, but
+  it doesn't reflect the actual order in which each of these steps is processed.
+end note
+
+@enduml

@@ -1,0 +1,30 @@
+@startuml
+
+skinparam participant {
+    FontColor black
+    BorderColor black
+}
+
+actor User
+
+participant "Frontend (UI)" as UI
+participant "Backend API" as API
+participant "Database" as DB
+
+User -> UI : Opens day with tracked mood
+UI -> User : Displays tracked information
+
+User -> UI : Clicks "Delete" button
+UI -> User : Shows confirmation modal
+
+User -> UI : Confirms deletion
+UI -> API : Sends DELETE request to delete track
+API -> DB : Deletes track (by ID or date)
+DB --> API : OK (void success)
+API --> UI : OK (void success)
+
+UI -> UI : Removes the day from cache
+UI -> User : Shows success toast
+UI -> User : Updates view (day without track)
+
+@enduml

@@ -1,0 +1,46 @@
+@startuml
+
+skinparam participant {
+    FontColor black
+    BorderColor black
+}
+
+skinparam participant {
+    BackgroundColor<<AWS-Cognito>> #F8A349
+    BorderColor<<AWS-Cognito>> #C27023
+    FontColor<<AWS-Cognito>> black
+}
+
+actor User
+
+participant "Frontend (UI)" as UI
+participant "Backend API" as API
+participant "Cognito Service" as Cognito <<AWS-Cognito>>
+
+User -> UI : Perform action (e.g., API request)
+UI -> API : Send request with access token
+
+API --> UI : Respond 401 Unauthorized (TokenExpired)
+
+UI -> UI : Check cookies for username and refreshToken
+
+alt Missing refresh token or username
+    UI -> UI : Clear all cookies
+    UI -> UI : Clear cache (react-query)
+    UI -> User : Redirect to login page
+else Valid refresh token and username
+    UI -> API : Send refresh token request with username and refreshToken
+    API -> Cognito : Validate refresh token
+    Cognito --> API : Respond with new access token
+    API --> UI : Respond with new access token
+
+    UI -> UI : Update access token cookie
+    UI -> UI : Set new Authorization header
+    UI -> UI : Refetch user data (getMe)
+    UI -> API : Retry original API request with new access token
+    API --> UI : Respond successful
+
+    UI -> User : Show success feedback (e.g., toast, updated UI)
+end
+
+@enduml
