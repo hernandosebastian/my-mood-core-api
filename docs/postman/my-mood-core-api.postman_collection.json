@@ -36,7 +36,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"username\": \"{{$randomEmail}}\",\r\n    \"nickname\": \"{{$randomUserName}}\",\r\n    \"avatarSrc\": \"{{$randomImageUrl}}\",\r\n    \"password\": \"{{$randomPassword}}\"\r\n}\r\n",
+              "raw": "{\n    \"username\": \"{{$randomEmail}}\",\n    \"nickname\": \"{{$randomUserName}}\",\n    \"password\": \"{{$randomPassword}}\",\n    \"recaptchaToken\": \"<RECAPTCHA_TOKEN>\"\n}\n",
               "options": {
                 "raw": {
                   "language": "json"
@@ -58,7 +58,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"username\": \"{{$randomEmail}}\",\r\n    \"code\": \"<CODE_FROM_COGNITO>\"\r\n}\r\n",
+              "raw": "{\n    \"username\": \"{{$randomEmail}}\",\n    \"code\": \"<CODE_FROM_COGNITO>\"\n}\n",
               "options": {
                 "raw": {
                   "language": "json"
@@ -80,7 +80,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"username\": \"{{$randomEmail}}\",\r\n    \"password\": \"{{$randomPassword}}\"\r\n}\r\n",
+              "raw": "{\n    \"username\": \"{{$randomEmail}}\",\n    \"password\": \"{{$randomPassword}}\"\n}\n",
               "options": {
                 "raw": {
                   "language": "json"
@@ -102,7 +102,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"username\": \"{{$randomEmail}}\"\r\n}\r\n",
+              "raw": "{\n    \"username\": \"{{$randomEmail}}\"\n}\n",
               "options": {
                 "raw": {
                   "language": "json"
@@ -124,7 +124,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"username\": \"{{$randomEmail}}\"\r\n}\r\n",
+              "raw": "{\n    \"username\": \"{{$randomEmail}}\"\n}\n",
               "options": {
                 "raw": {
                   "language": "json"
@@ -146,7 +146,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"username\": \"{{$randomEmail}}\",\r\n    \"newPassword\": \"{{$randomPassword}}\",\r\n    \"code\": \"<CODE_FROM_COGNITO>\"\r\n}\r\n",
+              "raw": "{\n    \"username\": \"{{$randomEmail}}\",\n    \"newPassword\": \"{{$randomPassword}}\",\n    \"code\": \"<CODE_FROM_COGNITO>\"\n}\n",
               "options": {
                 "raw": {
                   "language": "json"
@@ -157,6 +157,28 @@
               "raw": "{{BASE_URL}}/auth/confirm-password",
               "host": ["{{BASE_URL}}"],
               "path": ["auth", "confirm-password"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"{{$randomEmail}}\",\n    \"refreshToken\": \"<REFRESH_TOKEN>\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/auth/refresh",
+              "host": ["{{BASE_URL}}"],
+              "path": ["auth", "refresh"]
             }
           },
           "response": []
@@ -195,7 +217,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"nickname\": \"{{$randomUserName}}\"\r\n}\r\n",
+              "raw": "{\n    \"nickname\": \"{{$randomUserName}}\"\n}\n",
               "options": {
                 "raw": {
                   "language": "json"
@@ -232,7 +254,7 @@
               "mode": "formdata",
               "formdata": [
                 {
-                  "key": "",
+                  "key": "file",
                   "type": "file",
                   "src": "avatar.jpg"
                 }
@@ -258,17 +280,17 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{BASE_URL}}/track/stats?startDate=:startDate&endDate=:endDate",
+              "raw": "{{BASE_URL}}/track/stats?startDate=2024-01-01T00:00:00Z&endDate=2024-12-31T23:59:59Z",
               "host": ["{{BASE_URL}}"],
               "path": ["track", "stats"],
               "query": [
                 {
                   "key": "startDate",
-                  "value": ":startDate"
+                  "value": "2024-01-01T00:00:00Z"
                 },
                 {
                   "key": "endDate",
-                  "value": ":endDate"
+                  "value": "2024-12-31T23:59:59Z"
                 }
               ]
             }
@@ -281,17 +303,17 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{BASE_URL}}/track/by-date-range?startDate=:startDate&endDate=:endDate",
+              "raw": "{{BASE_URL}}/track/by-date-range?startDate=2024-01-01T00:00:00Z&endDate=2024-12-31T23:59:59Z",
               "host": ["{{BASE_URL}}"],
               "path": ["track", "by-date-range"],
               "query": [
                 {
                   "key": "startDate",
-                  "value": ":startDate"
+                  "value": "2024-01-01T00:00:00Z"
                 },
                 {
                   "key": "endDate",
-                  "value": ":endDate"
+                  "value": "2024-12-31T23:59:59Z"
                 }
               ]
             }
@@ -305,7 +327,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"title\": \"Happy\",\r\n    \"description\": \"{{$randomJobDescriptor}}\",\r\n    \"date\": \"2024-10-29T00:00:00Z\"\r\n}\r\n",
+              "raw": "{\n    \"title\": \"HAPPY\",\n    \"description\": \"{{$randomJobDescriptor}}\",\n    \"date\": \"2024-10-29T00:00:00Z\"\n}\n",
               "options": {
                 "raw": {
                   "language": "json"
@@ -327,7 +349,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"title\": \"Happy\",\r\n    \"description\": \"{{$randomJobDescriptor}}\"\r\n}\r\n",
+              "raw": "{\n    \"title\": \"HAPPY\",\n    \"description\": \"{{$randomJobDescriptor}}\"\n}\n",
               "options": {
                 "raw": {
                   "language": "json"

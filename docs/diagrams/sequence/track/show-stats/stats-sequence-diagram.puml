@@ -1,0 +1,28 @@
+@startuml
+
+skinparam participant {
+    FontColor black
+    BorderColor black
+}
+
+actor User
+
+participant "Frontend (UI)" as UI
+participant "Backend API" as API
+participant "Database" as DB
+
+User -> UI : Navigate to stats section
+UI -> API : Send request to get all user tracks
+API -> DB : Send request to fetch all tracks
+DB --> API : Respond with all tracks
+
+API -> DB : Send request to fetch tracks from last 3 months
+DB --> API : Respond with tracks from the last 3 months
+
+API -> API : Group stats by month and track type
+API --> UI : Respond with all tracks and grouped stats
+
+UI -> UI : Cache response
+UI -> User : Display charts with the data
+
+@enduml

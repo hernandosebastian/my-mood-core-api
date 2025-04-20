@@ -27,15 +27,16 @@ jobs:
         node-version: [16.x]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'npm'
 
-      - name: NPM or Yarn install with caching
-        uses: bahmutov/npm-install@v1.6.0
+      - name: Install dependencies
+        run: npm ci
 
       - name: Lint & Format
         run: |

@@ -1,0 +1,41 @@
+@startuml
+
+skinparam participant {
+    FontColor black
+    BorderColor black
+}
+
+skinparam participant {
+    BackgroundColor<<AWS-S3>> #569A31
+    BorderColor<<AWS-S3>> #38762C
+    FontColor<<AWS-S3>> black
+}
+
+actor User
+
+participant "Frontend (UI)" as UI
+participant "Backend API" as API
+database "Database" as DB
+participant "File Storage" as S3 <<AWS-S3>>
+
+User -> UI : Fill edit profile form with new avatar
+UI -> API : Send edit profile request with new avatar
+API -> DB : Get user from database
+DB --> API : Respond with user data
+
+alt User has existing avatar
+    API -> S3 : Delete old avatar from bucket
+    S3 --> API : Respond successful (void)
+end
+
+API -> S3 : Upload new avatar to bucket
+S3 --> API : Respond successful (void)
+
+API -> DB : Update user with new avatar path
+DB --> API : Respond with updated user
+
+API --> UI : Respond with updated user
+UI -> UI : Update user cache
+UI -> User : Show successful toast
+
+@enduml

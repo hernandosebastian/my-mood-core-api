@@ -1,0 +1,42 @@
+@startuml
+
+skinparam participant {
+    FontColor black
+    BorderColor black
+}
+
+skinparam participant {
+    BackgroundColor<<AWS-Cognito>> #4D27A8
+    BorderColor<<AWS-Cognito>> #341D78
+    FontColor<<AWS-Cognito>> white
+}
+
+actor User
+
+participant "Frontend (UI)" as UI
+participant "Backend API" as API
+database "Database" as DB
+participant "User Authentication" as Cognito <<AWS-Cognito>>
+
+User -> UI : Fill sign in form
+UI -> API : Send sign in request
+
+API -> DB : Fetch user by username
+DB --> API : Response with user found
+
+API -> Cognito : Sign in with username and password
+Cognito --> API : Response with tokens
+
+API --> UI : Response with tokens
+UI -> UI : Save access token in cookies
+UI -> User : Show successful sign in toast
+
+UI -> API : Request user information with access token
+API -> DB : Fetch user by ID
+DB --> API : Response with user data
+API --> UI : Response with user data
+
+UI -> UI : Cache user data
+UI -> User : Display homepage with sidebar filled with user information
+
+@enduml

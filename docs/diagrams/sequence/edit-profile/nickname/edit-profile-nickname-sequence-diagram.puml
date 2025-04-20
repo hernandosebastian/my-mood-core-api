@@ -1,0 +1,23 @@
+@startuml
+
+skinparam participant {
+    FontColor black
+    BorderColor black
+}
+
+actor User
+
+participant "Frontend (UI)" as UI
+participant "Backend API" as API
+database "Database" as DB
+
+User -> UI : Fill edit nickname form
+UI -> API : Send edit nickname request
+API -> DB : Update user in database
+DB --> API : Respond user updated
+API --> UI : Respond with updated user
+UI -> UI : Update user cache
+UI -> User : Show successful toast
+UI -> User : Redirect to homepage
+
+@enduml
