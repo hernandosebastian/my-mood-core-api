@@ -1,0 +1,26 @@
+@startuml
+
+skinparam participant {
+    FontColor black
+    BorderColor black
+}
+
+actor User
+
+participant "Frontend (UI)" as UI
+participant "Backend API" as API
+participant "Database" as DB
+
+User -> UI : Log in
+UI -> API : Send request to get all user tracks for the year
+API -> DB : Send request to fetch all tracks for the user
+DB --> API : Respond with all tracks for the user
+
+API --> UI : Respond with all tracks
+UI -> UI : Cache response
+UI -> UI : Process tracks for calendar (group by month, mood type, etc.)
+UI -> User : Display calendar with tracks
+
+note right of UI : User can click on a day to view, create, edit, or delete a track.
+
+@enduml

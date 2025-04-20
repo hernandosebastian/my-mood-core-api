@@ -1,0 +1,43 @@
+@startuml
+
+skinparam participant {
+    FontColor black
+    BorderColor black
+}
+
+skinparam participant {
+    BackgroundColor<<AWS-SES>> #DD344C
+    BorderColor<<AWS-SES>> #A61C35
+    FontColor<<AWS-SES>> black
+}
+
+skinparam participant {
+    BackgroundColor<<AWS-Cognito>> #4D27A8
+    BorderColor<<AWS-Cognito>> #341D78
+    FontColor<<AWS-Cognito>> white
+}
+
+actor User
+
+participant "Frontend (UI)" as UI
+participant "Backend API" as API
+database "Database" as DB
+
+participant "Send Emails" as SES <<AWS-SES>>
+participant "User Authentication" as Cognito <<AWS-Cognito>>
+
+User -> UI : Fill resend confirmation code form
+UI -> API : Send resend confirmation code request
+
+API -> DB : Find user by email
+DB --> API : Response with user data
+
+API -> Cognito : Resend confirmation code
+Cognito -> SES : Send confirmation code email
+SES -> User : Send email with confirmation code
+Cognito --> API : Response successful
+
+API --> UI : Response successful
+UI -> User : Show success toast and redirect to confirm user page
+
+@enduml
